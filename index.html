@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>прятки • гамбитрп</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS for modern fluid responsive utility classes -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Plus Jakarta Sans -->
+    <!-- Google Fonts: Plus Jakarta Sans for a premium tech feel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome Icons for minimalist aesthetic icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -21,7 +21,7 @@
             overflow-x: hidden;
         }
 
-        /* Custom Scrollbar */
+        /* Custom premium scrollbar styling */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -37,14 +37,14 @@
             background: rgba(168, 85, 247, 0.45);
         }
 
-        /* Glowing background blobs */
+        /* Ambient floating light blobs */
         .blob {
             position: absolute;
             border-radius: 50%;
             filter: blur(120px);
             z-index: 0;
             pointer-events: none;
-            opacity: 0.2;
+            opacity: 0.15;
             animation: blob-float 15s infinite alternate ease-in-out;
         }
 
@@ -54,7 +54,7 @@
             100% { transform: translate(-15px, 15px) scale(0.95); }
         }
 
-        /* Amoeba Button Styling */
+        /* Fluid amoeba organic buttons with live deform animation */
         .amoeba-btn {
             background: linear-gradient(135deg, rgba(147, 51, 234, 0.6) 0%, rgba(79, 70, 229, 0.6) 100%);
             border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
@@ -77,7 +77,7 @@
             100% { border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%; }
         }
 
-        /* Glassmorphism Panels */
+        /* Glassmorphism panel styling */
         .glass-panel {
             background: rgba(10, 8, 28, 0.65);
             backdrop-filter: blur(14px);
@@ -90,7 +90,7 @@
             box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.1);
         }
 
-        /* Micro-interactions */
+        /* Micro interactions feedback scale */
         .interactive-scale {
             transition: transform 0.2s ease, opacity 0.2s ease;
         }
@@ -98,29 +98,29 @@
             transform: scale(0.96);
         }
 
-        /* District Card States */
+        /* Map districts interactive visual cards styles */
         .district-card {
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .district-card.excluded {
-            opacity: 0.2;
+            opacity: 0.18;
             text-decoration: line-through;
-            transform: scale(0.96);
+            transform: scale(0.95);
             border-color: transparent !important;
             box-shadow: none !important;
         }
         .district-card.target {
-            border-color: rgba(239, 68, 68, 0.55) !important;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2) !important;
-            animation: pulse-border 2s infinite alternate;
+            border-color: rgba(239, 68, 68, 0.6) !important;
+            box-shadow: 0 0 18px rgba(239, 68, 68, 0.25) !important;
+            animation: pulse-border 2.2s infinite alternate;
         }
 
         @keyframes pulse-border {
             0% { border-color: rgba(239, 68, 68, 0.35); }
-            100% { border-color: rgba(239, 68, 68, 0.8); }
+            100% { border-color: rgba(239, 68, 68, 0.85); }
         }
 
-        /* Dynamic visual feedback for ELO changes */
+        /* ELO score animation pulse events */
         .elo-pulse-up {
             animation: elo-up-anim 0.5s ease-out;
         }
@@ -130,22 +130,21 @@
 
         @keyframes elo-up-anim {
             0% { transform: scale(1); color: #10b981; }
-            50% { transform: scale(1.2); color: #34d399; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+            50% { transform: scale(1.22); color: #34d399; text-shadow: 0 0 12px rgba(16, 185, 129, 0.6); }
             100% { transform: scale(1); color: inherit; }
         }
 
         @keyframes elo-down-anim {
             0% { transform: scale(1); color: #ef4444; }
-            50% { transform: scale(1.2); color: #f87171; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+            50% { transform: scale(1.22); color: #f87171; text-shadow: 0 0 12px rgba(239, 68, 68, 0.6); }
             100% { transform: scale(1); color: inherit; }
         }
 
-        /* Custom scroll behavior inside clue log */
         .smooth-scroll {
             scroll-behavior: smooth;
         }
 
-        /* Minimalist lower-case uniform rule */
+        /* Mandatory modern lowercase visual identity */
         .lowercase-all, .lowercase-all * {
             text-transform: lowercase !important;
         }
@@ -153,12 +152,12 @@
 </head>
 <body class="relative min-h-screen flex flex-col lowercase-all">
 
-    <!-- Background glowing orbs -->
+    <!-- Background glow elements -->
     <div class="blob w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-purple-600 top-10 left-[-100px]"></div>
     <div class="blob w-[250px] h-[250px] md:w-[450px] md:h-[450px] bg-blue-600 bottom-10 right-[-100px]" style="animation-delay: -5s;"></div>
     <div class="blob w-[300px] h-[300px] bg-pink-600 top-1/2 left-1/3" style="animation-delay: -10s; opacity: 0.08;"></div>
 
-    <!-- Header / Navigation -->
+    <!-- Header / Nav bar -->
     <header class="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-6 z-10">
         <div class="flex items-center gap-4">
             <div class="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-950/40">
@@ -171,7 +170,7 @@
                 <div class="flex items-center gap-1.5 mt-0.5">
                     <span class="text-[9px] text-gray-500 font-medium tracking-wider">система мониторинга</span>
                     <span class="text-gray-700">•</span>
-                    <!-- Session Status Trigger Button -->
+                    <!-- Session / Connection info popup button -->
                     <button onclick="openSyncStatusModal()" class="flex items-center gap-1 text-[9px] text-purple-400 hover:text-purple-300 transition-colors focus:outline-none">
                         <span id="sync-status-indicator" class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
                         <span id="sync-status-text">проверка связи...</span>
@@ -180,7 +179,7 @@
             </div>
         </div>
 
-        <!-- Tab Controls -->
+        <!-- Navigation tab panel buttons -->
         <div class="flex bg-neutral-900/50 p-1 rounded-2xl border border-white/5 backdrop-blur-md">
             <button id="tab-players-btn" onclick="switchTab('players')" class="px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10">
                 <i class="fa-solid fa-users text-[10px] text-purple-400"></i> игроки
@@ -191,22 +190,20 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
+    <!-- Main content frame -->
     <main class="flex-grow w-full max-w-7xl mx-auto px-6 pb-12 z-10">
         
-        <!-- SECTION 1: PLAYERS TAB -->
+        <!-- SECTION 1: PLAYERS VIEW -->
         <section id="players-section" class="space-y-8 animate-fade-in">
-            
-            <!-- Controls Grid -->
+            <!-- Search & Control elements block -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
-                
-                <!-- Search -->
+                <!-- Live Search input -->
                 <div class="relative col-span-1 md:col-span-2">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
                     <input type="text" id="player-search" oninput="filterPlayers()" placeholder="поиск игрока по нику..." class="w-full bg-neutral-950/40 border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-purple-500/30 focus:ring-1 focus:ring-purple-500/30 transition-all backdrop-blur-md">
                 </div>
 
-                <!-- Open Add Modal Button (Amoeba Style) -->
+                <!-- Add player organic trigger button -->
                 <div class="flex justify-end">
                     <button onclick="openModal()" class="amoeba-btn text-white font-medium text-xs px-8 py-3.5 flex items-center gap-2 select-none">
                         <i class="fa-solid fa-user-plus text-[10px]"></i> добавить игрока
@@ -214,34 +211,34 @@
                 </div>
             </div>
 
-            <!-- Loader State -->
+            <!-- Preloader spinner -->
             <div id="players-loading" class="flex flex-col items-center justify-center py-20 gap-4 text-gray-500">
                 <div class="w-7 h-7 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
                 <p class="text-[11px]">подключаемся к облачной базе эло...</p>
             </div>
 
-            <!-- Empty State -->
+            <!-- Empty Database screen state -->
             <div id="players-empty" class="hidden flex-col items-center justify-center py-20 text-gray-500 glass-panel rounded-3xl p-8 border border-white/5">
                 <i class="fa-solid fa-users-slash text-2xl mb-4 text-purple-900/60"></i>
                 <p class="text-xs font-medium">в базе пока нет участников</p>
                 <p class="text-[9px] text-gray-600 mt-1">нажмите кнопку выше, чтобы занести первого игрока</p>
             </div>
 
-            <!-- Players Grid -->
+            <!-- Main dynamic players list grids -->
             <div id="players-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamically loaded -->
+                <!-- Loaded dynamically -->
             </div>
         </section>
 
-        <!-- SECTION 2: MAP & DISTRICTS TAB -->
+        <!-- SECTION 2: DISTRICT MAP TRACKER & SYNCHRONIZED CLUES TAB -->
         <section id="map-section" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
             
-            <!-- Districts Tracker Panel (Left side) -->
+            <!-- Districts Tracking Board (Left block) -->
             <div class="lg:col-span-6 space-y-6">
                 <div class="glass-panel p-6 rounded-3xl space-y-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h3 class="text-xs font-bold text-white tracking-wide">карта районов</h3>
+                            <h3 class="text-xs font-bold text-white tracking-wide">карта районов (синхронно)</h3>
                             <p class="text-[10px] text-gray-500 mt-1">клик — убрать (вычеркнуть), 2-й клик — подозревать (подсветить красным), 3-й клик — сброс</p>
                         </div>
                         <button onclick="resetDistricts()" class="interactive-scale px-3 py-1.5 rounded-xl bg-red-950/20 hover:bg-red-950/40 text-red-400 text-[9px] font-bold border border-red-500/10 transition-all flex items-center gap-1.5">
@@ -249,20 +246,23 @@
                         </button>
                     </div>
 
-                    <!-- Grid of Districts -->
+                    <!-- Dynamic Districts Grid -->
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="districts-grid">
-                        <!-- Rendered by JS -->
+                        <!-- Loaded and Synced by JS -->
                     </div>
                 </div>
 
-                <!-- Custom Note taking zone -->
+                <!-- Live Collaborative Notes Board -->
                 <div class="glass-panel p-5 rounded-3xl">
-                    <h4 class="text-[10px] font-bold text-gray-500 tracking-wide mb-3">заметки по игре (локально)</h4>
-                    <textarea id="game-notes" oninput="saveLocalNotes()" placeholder="запишите сюда приметы скина, тайминги спавна или особое поведение игроков..." class="w-full h-24 bg-neutral-950/20 rounded-2xl p-3 text-xs text-gray-300 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-purple-500/20 border border-white/5 resize-none transition-all"></textarea>
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-[10px] font-bold text-gray-500 tracking-wide">заметки по игре (синхронизируется)</h4>
+                        <span id="notes-sync-indicator" class="text-[8px] text-emerald-500 hidden"><i class="fa-solid fa-cloud-arrow-up animate-bounce"></i> сохранено</span>
+                    </div>
+                    <textarea id="game-notes" oninput="saveSharedNotes()" placeholder="запишите сюда приметы скина, тайминги спавна или особое поведение игроков — изменения увидят все участники..." class="w-full h-28 bg-neutral-950/20 rounded-2xl p-3 text-xs text-gray-300 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-purple-500/20 border border-white/5 resize-none transition-all"></textarea>
                 </div>
             </div>
 
-            <!-- Hint Generator Panel (Right side) -->
+            <!-- Hint Generator & Realtime Shared Logs Panel (Right block) -->
             <div class="lg:col-span-6 space-y-6">
                 <div class="glass-panel p-6 rounded-3xl space-y-5">
                     <div>
@@ -270,23 +270,23 @@
                         <p class="text-[10px] text-gray-500 mt-1">выберите по одному фактору из каждой категории, чтобы мгновенно передать наводку команде</p>
                     </div>
 
-                    <!-- Group 1: Environment/Position -->
+                    <!-- Group 1: Environmental details -->
                     <div class="space-y-3">
                         <span class="text-[9px] font-bold text-purple-400 tracking-wider">фактор 1: физическое окружение</span>
                         <div class="flex flex-wrap gap-2" id="hint-group-1">
-                            <!-- JS populated -->
+                            <!-- Populated dynamically -->
                         </div>
                     </div>
 
-                    <!-- Group 2: Player state -->
+                    <!-- Group 2: Player postural states -->
                     <div class="space-y-3">
                         <span class="text-[9px] font-bold text-emerald-400 tracking-wider">фактор 2: поза и детали</span>
                         <div class="flex flex-wrap gap-2" id="hint-group-2">
-                            <!-- JS populated -->
+                            <!-- Populated dynamically -->
                         </div>
                     </div>
 
-                    <!-- Output Clue Box -->
+                    <!-- Generated Result Indicator -->
                     <div class="relative bg-neutral-950/40 rounded-2xl p-4 border border-white/5 overflow-hidden flex flex-col justify-center items-center gap-2 min-h-[110px] text-center">
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-indigo-500/5 pointer-events-none"></div>
                         <span class="text-[9px] font-semibold text-gray-500 tracking-widest uppercase">сгенерированная наводка</span>
@@ -300,14 +300,14 @@
                         </button>
                     </div>
 
-                    <!-- Clue History Log (Synchronized) -->
+                    <!-- Synchronized realtime hints database list -->
                     <div class="pt-3 border-t border-white/5">
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-[9px] font-bold text-indigo-400 tracking-wider">активные наводки в логе</span>
                             <button onclick="clearAllHints()" class="text-[9px] text-gray-500 hover:text-red-400 transition-colors">очистить лог</button>
                         </div>
                         <div id="hints-log" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 smooth-scroll">
-                            <!-- Realtime clues rendered here -->
+                            <!-- Realtime clues synced with cloud database -->
                         </div>
                     </div>
                 </div>
@@ -315,7 +315,7 @@
         </section>
     </main>
 
-    <!-- ADD PLAYER MODAL -->
+    <!-- ADD PLAYER DIALOG MODAL -->
     <div id="add-player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
         <div class="glass-panel w-full max-w-md p-6 rounded-3xl space-y-6 border border-white/10 transform scale-95 transition-all duration-300">
             <div class="flex justify-between items-center">
@@ -348,7 +348,7 @@
         </div>
     </div>
 
-    <!-- CUSTOM CONFIRM DELETE MODAL (No alerts/confirm) -->
+    <!-- CONFIRM DELETE INTERACTION MODAL -->
     <div id="delete-player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
         <div class="glass-panel w-full max-w-sm p-6 rounded-3xl space-y-6 border border-white/10 transform scale-95 transition-all duration-300">
             <div class="text-center space-y-2">
@@ -369,7 +369,7 @@
         </div>
     </div>
 
-    <!-- CONNECTION & SYNC DETAILS MODAL -->
+    <!-- CONNECTION SYSTEM STATUS MODAL -->
     <div id="sync-status-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
         <div class="glass-panel w-full max-w-md p-6 rounded-3xl space-y-5 border border-white/10 transform scale-95 transition-all duration-300">
             <div class="flex justify-between items-center">
@@ -389,14 +389,14 @@
                     <span id="conn-session-id" class="text-indigo-300 font-mono text-[10px] select-all">определение...</span>
                 </div>
                 <div class="p-3.5 bg-neutral-900/40 rounded-2xl border border-white/5 space-y-2">
-                    <h4 class="text-[10px] font-bold text-white tracking-wider">инструкция для общей игры:</h4>
+                    <h4 class="text-[10px] font-bold text-white tracking-wider">инструкция для совместной игры:</h4>
                     <p class="text-[10px] text-gray-400 leading-relaxed">
-                        чтобы наводки и эло игроков обновлялись одновременно у всей вашей команды, все игроки должны находиться в одной сессии. скопируйте сессионный id выше и сверьте его с союзниками.
+                        чтобы наводки, зачеркивания районов, общие заметки и эло игроков обновлялись мгновенно у всей вашей команды, все игроки должны находиться в одной сессии. скопируйте сессионный id выше и сверьте его с союзниками.
                     </p>
                 </div>
                 <div class="p-3 bg-yellow-950/20 border border-yellow-500/10 text-[10px] rounded-2xl text-yellow-300 leading-relaxed space-y-1">
                     <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> если горит желтый статус "локальный режим":</p>
-                    <p>убедитесь, что в консоли firebase включен вход "anonymous" (auth), а правила firestore rules разрешают чтение и запись (allow read, write: if true).</p>
+                    <p>убедитесь, что в консоли firebase включен вход "anonymous" (auth), а правила firestore rules разрешают чтение и запись (allow read, write: if true) для всего дерева.</p>
                 </div>
             </div>
             
@@ -406,16 +406,16 @@
         </div>
     </div>
 
-    <!-- NOTIFICATION TOAST -->
+    <!-- NOTIFICATION POPUP TOAST -->
     <div id="toast" class="fixed bottom-6 right-6 z-50 bg-neutral-950/90 backdrop-blur-md border border-white/10 text-xs font-medium px-4 py-3 rounded-2xl text-purple-300 flex items-center gap-2 shadow-xl shadow-black/50 opacity-0 pointer-events-none transition-all duration-300">
         <i class="fa-solid fa-circle-check text-purple-400"></i>
         <span id="toast-message">действие выполнено</span>
     </div>
 
-    <!-- FOOTER -->
+    <!-- FOOTER STATUS STRIP -->
     <footer class="w-full max-w-7xl mx-auto px-6 py-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-gray-600 text-[9px] z-10">
         <div>
-            прятки гамбит рп • разработан в минималистичном дизайне
+            прятки гамбит рп • полностью синхронизированное пространство
         </div>
         <div class="flex items-center gap-1.5">
             <span id="sync-pulse-dot" class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
@@ -423,16 +423,16 @@
         </div>
     </footer>
 
-    <!-- Firebase Integration -->
+    <!-- Firestore / Auth Web Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { initializeFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global variables given or generated
+        // Global variables initialized
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'cloud-65583';
         
-        // Exact configuration supplied by user
+        // Supplied Verified Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyBhr50uCwWCvaHlTrCJ9ZrIPStzoFuXYCY",
             authDomain: "cloud-65583.firebaseapp.com",
@@ -443,24 +443,25 @@
             measurementId: "G-G4R39QFH29"
         };
 
-        // Initialize Firebase
+        // Firebase modules state variables
         let app, db, auth;
         let authUser = null;
         let isOnline = false;
 
-        // In-memory local state fallback if database has issues/offline
+        // Fallback local memory values
         let players = [];
         let hintLog = [];
         let districtStates = {};
         let deleteTargetId = null;
+        let notesSaveTimeout = null;
 
-        // Districts list definition
+        // Static Districts list config
         const districtsList = [
             'спавн', 'вертолёт', 'пляж', 'центральный', 'фонтан', 
             'гетто', 'элитный', 'промышленный', 'вода', 'подземка'
         ];
 
-        // Hint generator state variables
+        // Static Selection pills configurations
         const hintGroup1 = [
             'темно', 'светло', 'высоко', 'низко', 'внутри', 
             'снаружи', 'рядом', 'на объекте', 'за объектом', 'над объектом', 'под объектом'
@@ -474,12 +475,12 @@
         let selectedHint1 = '';
         let selectedHint2 = '';
 
-        // Initialize basic district statuses
+        // Prepopulate empty local districts
         districtsList.forEach(d => {
             districtStates[d] = 0;
         });
 
-        // Initialize Local Storage Support
+        // Local storage initial fallbacks
         function initLocalStorageBackup() {
             try {
                 const storedPlayers = localStorage.getItem(`gambit_players_${appId}`);
@@ -487,10 +488,9 @@
                 if (storedPlayers) {
                     players = JSON.parse(storedPlayers);
                 } else {
-                    // Populate with basic mockup if completely blank
                     players = [
-                        { id: 'mock_1', name: 'gambit_pro', elo: 15, createdAt: Date.now() - 100000 },
-                        { id: 'mock_2', name: 'skin_tracker', elo: 8, createdAt: Date.now() - 50000 }
+                        { id: 'player_example_1', name: 'gambit_explorer', elo: 15, createdAt: Date.now() - 100000 },
+                        { id: 'player_example_2', name: 'tracker_bot', elo: 8, createdAt: Date.now() - 50000 }
                     ];
                 }
                 if (storedHints) {
@@ -501,27 +501,21 @@
                     document.getElementById('game-notes').value = storedNotes;
                 }
             } catch (e) {
-                console.warn("localStorage backup unavailable:", e);
+                console.warn("localstorage state unavailable:", e);
             }
         }
 
+        // Write changes to local browser backup
         function saveLocalBackup() {
             try {
                 localStorage.setItem(`gambit_players_${appId}`, JSON.stringify(players));
                 localStorage.setItem(`gambit_hints_${appId}`, JSON.stringify(hintLog));
             } catch (e) {
-                console.warn("could not write to localStorage:", e);
+                console.warn("could not write to browser localstorage:", e);
             }
         }
 
-        window.saveLocalNotes = function() {
-            try {
-                const text = document.getElementById('game-notes').value;
-                localStorage.setItem(`gambit_notes_${appId}`, text);
-            } catch (e) {}
-        };
-
-        // Toast Helper
+        // Micro feedback toaster notification
         window.showToast = function(text) {
             const toast = document.getElementById('toast');
             const message = document.getElementById('toast-message');
@@ -534,7 +528,7 @@
             }, 2300);
         };
 
-        // Initializing UI status triggers
+        // UI Connection visual updater
         function setConnectionStatus(status) {
             const dot = document.getElementById('sync-status-indicator');
             const text = document.getElementById('sync-status-text');
@@ -564,24 +558,22 @@
             }
         }
 
-        // Initialize Firebase SDK or switch to fallback
+        // Start system application and try online connections
         async function startSystem() {
             initLocalStorageBackup();
-            
-            // Set session indicator to local while testing connection
             setConnectionStatus('local');
 
             try {
                 app = initializeApp(firebaseConfig);
+                // Connect database with high timeout compatibility bypass inside frame policies (Long Polling)
                 db = initializeFirestore(app, {
                     experimentalForceLongPolling: true,
                     useFetchStreams: false
                 });
                 auth = getAuth(app);
 
-                // Run auth with a timeout mechanism (5 seconds) to prevent freezing in poor network environments
                 const authPromise = authenticate();
-                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("auth timeout")), 5000));
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("auth timeout")), 4000));
                 
                 await Promise.race([authPromise, timeoutPromise]);
 
@@ -595,18 +587,19 @@
                 });
 
             } catch (err) {
-                console.warn("firebase connection failed. entering offline mode.", err);
+                console.warn("firebase server handshake skipped. running locally.", err);
                 switchToLocalOnly();
             }
         }
 
+        // Authenticate anonymously or via custom context token safely
         async function authenticate() {
             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                 try {
                     await signInWithCustomToken(auth, __initial_auth_token);
                     return;
                 } catch (tokenErr) {
-                    console.warn("initial auth token mismatch or expired, switching to anonymous auth...");
+                    console.debug("custom token not matching credentials, falling back to clean anonymous...");
                 }
             }
             try {
@@ -616,34 +609,38 @@
             }
         }
 
+        // Offline fallback executor
         function switchToLocalOnly() {
             document.getElementById('players-loading').classList.add('hidden');
             setConnectionStatus('local');
             renderPlayers();
             renderHintsLog();
+            renderDistricts();
         }
 
-        // Sync Firestore Real-time
+        // Setup Firestore listeners (Sync Loop)
         function initSync() {
             if (!authUser || !db) {
                 switchToLocalOnly();
                 return;
             }
 
-            // RULE 1 - STRICT PATH
+            // RULE 1 - STRICT PATH CONFIG
             const colPlayersRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
             const colHintsRef = collection(db, 'artifacts', appId, 'public', 'data', 'hints');
+            const docDistrictsRef = doc(db, 'artifacts', appId, 'public', 'data', 'mapState', 'districts');
+            const docNotesRef = doc(db, 'artifacts', appId, 'public', 'data', 'notes', 'sharedNotes');
             
             let isFirstLoadComplete = false;
 
-            // Sync players
+            // 1. Synchronize Players
             onSnapshot(colPlayersRef, (snapshot) => {
                 const updatedPlayers = [];
                 snapshot.forEach((doc) => {
                     updatedPlayers.push({ id: doc.id, ...doc.data() });
                 });
                 
-                // Sort by ELO (high to low) in memory - Rule 2: NO COMPLEX QUERIES
+                // Rule 2 - In-Memory sorting
                 players = updatedPlayers.sort((a, b) => b.elo - a.elo);
                 saveLocalBackup();
                 
@@ -652,28 +649,56 @@
                 renderPlayers();
                 isFirstLoadComplete = true;
             }, (error) => {
-                console.error("firestore players sync failed: ", error);
+                console.error("players snapshot failure: ", error);
                 if (!isFirstLoadComplete) {
                     switchToLocalOnly();
                 }
             });
 
-            // Sync clues
+            // 2. Synchronize Active Hints Log
             onSnapshot(colHintsRef, (snapshot) => {
                 const updatedHints = [];
                 snapshot.forEach((doc) => {
                     updatedHints.push({ id: doc.id, ...doc.data() });
                 });
-                // Sort newest first
                 hintLog = updatedHints.sort((a, b) => b.createdAt - a.createdAt);
                 saveLocalBackup();
                 renderHintsLog();
             }, (error) => {
-                console.error("firestore hints sync failed: ", error);
+                console.error("hints snapshot failure: ", error);
+            });
+
+            // 3. Synchronize Map Districts States (Shared Live Map)
+            onSnapshot(docDistrictsRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    districtsList.forEach(dist => {
+                        if (data[dist] !== undefined) {
+                            districtStates[dist] = data[dist];
+                        }
+                    });
+                    renderDistricts();
+                }
+            }, (error) => {
+                console.error("districts map state snapshot failure: ", error);
+            });
+
+            // 4. Synchronize Shared Game Notes (Shared Notepad)
+            onSnapshot(docNotesRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const notesField = document.getElementById('game-notes');
+                    // Avoid overriding input characters if current client is actively typing inside the block
+                    if (document.activeElement !== notesField) {
+                        notesField.value = data.text || '';
+                    }
+                }
+            }, (error) => {
+                console.error("notes database snapshot failure: ", error);
             });
         }
 
-        // Add Player Logic
+        // Submit player document to database
         window.submitNewPlayer = async function() {
             const nameInput = document.getElementById('new-player-name');
             const eloInput = document.getElementById('new-player-elo');
@@ -707,8 +732,8 @@
                     nameInput.value = '';
                     showToast(`игрок ${rawName} добавлен`);
                 } catch (err) {
-                    console.error("error creating player in database:", err);
-                    showToast('ошибка облачного сохранения, пробуем локально');
+                    console.error("error submitting database player doc:", err);
+                    showToast('ошибка облака, пробуем локальный режим');
                     addLocalPlayer(cleanNameId, rawName, eloVal);
                 }
             } else {
@@ -736,7 +761,7 @@
             renderPlayers();
         }
 
-        // Modify Player ELO with micro visual feedback animation
+        // Realtime ELO Adjustment logic
         window.adjustElo = async function(playerId, amount) {
             const playerIndex = players.findIndex(p => p.id === playerId);
             if (playerIndex === -1) return;
@@ -744,12 +769,11 @@
             const player = players[playerIndex];
             const newElo = Math.max(0, player.elo + amount);
             
-            // Apply scale animation on the badge
             const badge = document.getElementById(`elo-badge-${playerId}`);
             if (badge) {
                 const animClass = amount > 0 ? 'elo-pulse-up' : 'elo-pulse-down';
                 badge.classList.remove('elo-pulse-up', 'elo-pulse-down');
-                void badge.offsetWidth; // trigger reflow
+                void badge.offsetWidth; // reload dom styling flow
                 badge.classList.add(animClass);
             }
 
@@ -758,7 +782,7 @@
                 try {
                     await updateDoc(docRef, { elo: newElo });
                 } catch (err) {
-                    console.error("error updating elo in cloud:", err);
+                    console.error("failed updating ELO on server:", err);
                     updateLocalElo(playerId, newElo);
                 }
             } else {
@@ -776,7 +800,7 @@
             }
         }
 
-        // Custom Delete Modals
+        // Custom Delete operations
         window.deletePlayer = function(playerId, name) {
             deleteTargetId = playerId;
             const modal = document.getElementById('delete-player-modal');
@@ -802,7 +826,7 @@
                     showToast(`игрок удален`);
                     closeDeleteModal();
                 } catch (err) {
-                    console.error("error deleting player in cloud:", err);
+                    console.error("cloud delete document failed:", err);
                     deleteLocalPlayer(deleteTargetId);
                 }
             } else {
@@ -818,7 +842,7 @@
             renderPlayers();
         }
 
-        // Render Players
+        // Display players list to grid layout
         function renderPlayers() {
             const grid = document.getElementById('players-grid');
             const emptyState = document.getElementById('players-empty');
@@ -837,7 +861,7 @@
 
             grid.innerHTML = '';
             filtered.forEach(player => {
-                // ELO progression calculation (1 level per 10 elo, max lvl 10)
+                // Calculation for звание/level (progresses every 10 elo, ceiling level is 10)
                 const level = Math.min(10, Math.floor(player.elo / 10) + 1);
                 let progressPercentage = 0;
                 if (level >= 10) {
@@ -847,7 +871,6 @@
                     progressPercentage = Math.round(((player.elo - currentLevelBase) / 10) * 100);
                 }
 
-                // ELO Level Badges styling
                 let levelColor = 'bg-neutral-600 text-white border-neutral-700';
                 if (level >= 4 && level <= 6) {
                     levelColor = 'bg-emerald-600/90 text-white border-emerald-500/20';
@@ -904,7 +927,7 @@
             renderPlayers();
         };
 
-        // Navigation Switcher
+        // Header navigation control
         window.switchTab = function(tabName) {
             const playersTabBtn = document.getElementById('tab-players-btn');
             const mapTabBtn = document.getElementById('tab-map-btn');
@@ -921,19 +944,19 @@
                 playersTabBtn.className = "px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white";
                 playersSec.classList.add('hidden');
                 mapSec.classList.remove('hidden');
-                // Re-render map elements to ensure correct dimensions
+                
                 renderDistricts();
                 renderHintPills();
             }
         };
 
-        // Render Map Districts
+        // Render District Grid with database sync
         function renderDistricts() {
             const grid = document.getElementById('districts-grid');
             grid.innerHTML = '';
 
             districtsList.forEach(dist => {
-                const state = districtStates[dist];
+                const state = districtStates[dist] || 0;
                 let stateClass = '';
                 let icon = '<i class="fa-solid fa-location-crosshairs text-[9px] text-gray-600"></i>';
 
@@ -951,22 +974,82 @@
                     <span class="text-xs font-semibold text-gray-300">${dist}</span>
                     <span>${icon}</span>
                 `;
-                card.addEventListener('click', () => {
-                    // Loop: 0 -> 1 -> 2 -> 0
-                    districtStates[dist] = (districtStates[dist] + 1) % 3;
+                
+                card.onclick = async function() {
+                    // Cycles: 0 (default) -> 1 (excluded) -> 2 (target suspect) -> 0
+                    const nextState = (state + 1) % 3;
+                    districtStates[dist] = nextState;
                     renderDistricts();
-                });
+
+                    if (isOnline && db && authUser) {
+                        const docDistrictsRef = doc(db, 'artifacts', appId, 'public', 'data', 'mapState', 'districts');
+                        try {
+                            await setDoc(docDistrictsRef, districtStates, { merge: true });
+                        } catch (err) {
+                            console.error("cloud sync map state failed:", err);
+                        }
+                    } else {
+                        saveLocalBackup();
+                    }
+                };
+                
                 grid.appendChild(card);
             });
         }
 
-        window.resetDistricts = function() {
+        // Reset shared districts states completely
+        window.resetDistricts = async function() {
             districtsList.forEach(d => districtStates[d] = 0);
             renderDistricts();
-            showToast('карта районов сброшена');
+
+            if (isOnline && db && authUser) {
+                const docDistrictsRef = doc(db, 'artifacts', appId, 'public', 'data', 'mapState', 'districts');
+                try {
+                    await setDoc(docDistrictsRef, districtStates);
+                    showToast('карта районов сброшена у всей команды');
+                } catch (err) {
+                    console.error("failed resetting map state in cloud:", err);
+                    showToast('ошибка облака, карта сброшена локально');
+                }
+            } else {
+                showToast('карта районов сброшена локально');
+            }
         };
 
-        // Render Clue Generator Pills
+        // Dynamic Debounced Realtime Notes Save to Cloud
+        window.saveSharedNotes = function() {
+            const notesField = document.getElementById('game-notes');
+            const text = notesField.value;
+            const syncIndicator = document.getElementById('notes-sync-indicator');
+
+            // Save locally
+            try {
+                localStorage.setItem(`gambit_notes_${appId}`, text);
+            } catch (e) {}
+
+            if (isOnline && db && authUser) {
+                syncIndicator.classList.remove('hidden');
+                syncIndicator.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> сохраняем...';
+
+                clearTimeout(notesSaveTimeout);
+                notesSaveTimeout = setTimeout(async () => {
+                    const docNotesRef = doc(db, 'artifacts', appId, 'public', 'data', 'notes', 'sharedNotes');
+                    try {
+                        await setDoc(docNotesRef, {
+                            text: text,
+                            lastUpdated: Date.now()
+                        });
+                        syncIndicator.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> синхронизировано';
+                        setTimeout(() => syncIndicator.classList.add('hidden'), 1500);
+                    } catch (err) {
+                        console.error("failed submitting shared notes:", err);
+                        syncIndicator.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-rose-500"></i> ошибка';
+                    }
+                }, 1000); // 1s Debounce delay to prevent character cursor jumps
+            }
+        };
+
+        // Render clue configuration elements
         function renderHintPills() {
             const container1 = document.getElementById('hint-group-1');
             const container2 = document.getElementById('hint-group-2');
@@ -974,7 +1057,7 @@
             container1.innerHTML = '';
             container2.innerHTML = '';
 
-            // Group 1
+            // Render environmental category pills
             hintGroup1.forEach(hint => {
                 const isActive = selectedHint1 === hint;
                 const pill = document.createElement('button');
@@ -992,7 +1075,7 @@
                 container1.appendChild(pill);
             });
 
-            // Group 2
+            // Render postural category pills
             hintGroup2.forEach(hint => {
                 const isActive = selectedHint2 === hint;
                 const pill = document.createElement('button');
@@ -1011,6 +1094,7 @@
             });
         }
 
+        // Display selection visual combinations
         function updateHintOutput() {
             const outText = document.getElementById('hint-result');
             const addBtn = document.getElementById('add-hint-btn');
@@ -1037,7 +1121,7 @@
             }
         }
 
-        // Send created clue to synced log and reset selectors instantly
+        // Submit constructed clue to shared list
         window.addClueToLog = async function() {
             if (!selectedHint1 || !selectedHint2) return;
 
@@ -1053,8 +1137,8 @@
                     resetHintSelections();
                     showToast('наводка добавлена в лог');
                 } catch (err) {
-                    console.error("error adding hint to cloud log: ", err);
-                    showToast('ошибка сохранения наводки в облако, добавлено локально');
+                    console.error("error submitting hint to database log: ", err);
+                    showToast('ошибка сети, добавлено локально');
                     addLocalHint(finalHintText);
                 }
             } else {
@@ -1081,7 +1165,7 @@
             updateHintOutput();
         }
 
-        // Render Clue Logs
+        // Render clue list log elements
         function renderHintsLog() {
             const logContainer = document.getElementById('hints-log');
             if (hintLog.length === 0) {
@@ -1092,12 +1176,10 @@
             }
 
             logContainer.innerHTML = '';
-            // Display maximum of 12 logs
             const visibleLog = hintLog.slice(0, 12);
             
             visibleLog.forEach((item, index) => {
                 const div = document.createElement('div');
-                // Added brief flashing animation for the newly added item (index 0)
                 const isNew = index === 0 ? 'border-purple-500/30 shadow-md shadow-purple-950/20' : 'border-white/5';
                 div.className = `flex items-center justify-between bg-neutral-950/40 border rounded-xl p-2.5 hover:bg-neutral-950/60 transition-all duration-300 ${isNew}`;
                 
@@ -1120,11 +1202,10 @@
                 logContainer.appendChild(div);
             });
 
-            // Automatically scroll log container to the top to show newest clue
             logContainer.scrollTop = 0;
         }
 
-        // Copy Clue to Clipboard
+        // Copy Clue to user system clipboard
         window.copyHintText = function(text) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -1137,13 +1218,13 @@
                 document.execCommand('copy');
                 showToast('подсказка скопирована');
             } catch (err) {
-                console.error("copy failed: ", err);
+                console.error("clipboard write failed: ", err);
             } finally {
                 document.body.removeChild(textarea);
             }
         };
 
-        // Delete Single Hint Log Item
+        // Delete a single logged clue item
         window.deleteSingleHint = async function(hintId) {
             if (isOnline && db && authUser) {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'hints', hintId);
@@ -1151,7 +1232,7 @@
                     await deleteDoc(docRef);
                     showToast('наводка удалена из лога');
                 } catch (err) {
-                    console.error("error deleting hint in cloud: ", err);
+                    console.error("could not delete cloud hint:", err);
                     deleteLocalHint(hintId);
                 }
             } else {
@@ -1166,7 +1247,7 @@
             renderHintsLog();
         }
 
-        // Clear All Hints in Sync Log
+        // Clear all clue items entirely
         window.clearAllHints = async function() {
             if (isOnline && db && authUser) {
                 try {
@@ -1175,9 +1256,9 @@
                         return deleteDoc(docRef);
                     });
                     await Promise.all(promises);
-                    showToast('лог наводок очищен в облаке');
+                    showToast('лог наводок очищен у всей команды');
                 } catch (err) {
-                    console.error("error clearing hints in cloud: ", err);
+                    console.error("could not clear database hints log:", err);
                     clearLocalHints();
                 }
             } else {
@@ -1192,7 +1273,7 @@
             renderHintsLog();
         }
 
-        // Modal Handlers
+        // Generic Modal controllers
         window.openModal = function() {
             const modal = document.getElementById('add-player-modal');
             modal.classList.remove('pointer-events-none', 'opacity-0');
@@ -1217,7 +1298,7 @@
             modal.querySelector('div').classList.add('scale-95');
         };
 
-        // System Startup
+        // Window startup initiator
         window.onload = function() {
             renderDistricts();
             renderHintPills();
