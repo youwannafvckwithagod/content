@@ -30,28 +30,28 @@
             background: rgba(255, 255, 255, 0.02);
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(168, 85, 247, 0.2);
+            background: rgba(168, 85, 247, 0.25);
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(168, 85, 247, 0.4);
+            background: rgba(168, 85, 247, 0.45);
         }
 
-        /* Glowing amoeba background blobs */
+        /* Glowing background blobs */
         .blob {
             position: absolute;
             border-radius: 50%;
             filter: blur(120px);
             z-index: 0;
             pointer-events: none;
-            opacity: 0.25;
+            opacity: 0.2;
             animation: blob-float 15s infinite alternate ease-in-out;
         }
 
         @keyframes blob-float {
             0% { transform: translate(0px, 0px) scale(1); }
-            50% { transform: translate(40px, -60px) scale(1.2); }
-            100% { transform: translate(-20px, 20px) scale(0.9); }
+            50% { transform: translate(30px, -50px) scale(1.15); }
+            100% { transform: translate(-15px, 15px) scale(0.95); }
         }
 
         /* Amoeba Button Styling */
@@ -66,8 +66,8 @@
 
         .amoeba-btn:hover {
             border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%;
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+            transform: scale(1.03);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
             border-color: rgba(255, 255, 255, 0.2);
         }
 
@@ -77,7 +77,7 @@
             100% { border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%; }
         }
 
-        /* Glassmorphism Cards */
+        /* Glassmorphism Panels */
         .glass-panel {
             background: rgba(10, 8, 28, 0.65);
             backdrop-filter: blur(14px);
@@ -95,32 +95,57 @@
             transition: transform 0.2s ease, opacity 0.2s ease;
         }
         .interactive-scale:active {
-            transform: scale(0.95);
+            transform: scale(0.96);
         }
 
         /* District Card States */
         .district-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .district-card.excluded {
-            opacity: 0.15;
+            opacity: 0.2;
             text-decoration: line-through;
-            transform: scale(0.95);
+            transform: scale(0.96);
             border-color: transparent !important;
             box-shadow: none !important;
         }
         .district-card.target {
-            border-color: rgba(239, 68, 68, 0.6) !important;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.25) !important;
+            border-color: rgba(239, 68, 68, 0.55) !important;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.2) !important;
             animation: pulse-border 2s infinite alternate;
         }
 
         @keyframes pulse-border {
-            0% { border-color: rgba(239, 68, 68, 0.4); }
-            100% { border-color: rgba(239, 68, 68, 0.85); }
+            0% { border-color: rgba(239, 68, 68, 0.35); }
+            100% { border-color: rgba(239, 68, 68, 0.8); }
         }
 
-        /* Lowercase style override for beautiful uniform minimalist aesthetic */
+        /* Dynamic visual feedback for ELO changes */
+        .elo-pulse-up {
+            animation: elo-up-anim 0.5s ease-out;
+        }
+        .elo-pulse-down {
+            animation: elo-down-anim 0.5s ease-out;
+        }
+
+        @keyframes elo-up-anim {
+            0% { transform: scale(1); color: #10b981; }
+            50% { transform: scale(1.2); color: #34d399; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+            100% { transform: scale(1); color: inherit; }
+        }
+
+        @keyframes elo-down-anim {
+            0% { transform: scale(1); color: #ef4444; }
+            50% { transform: scale(1.2); color: #f87171; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+            100% { transform: scale(1); color: inherit; }
+        }
+
+        /* Custom scroll behavior inside clue log */
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+
+        /* Minimalist lower-case uniform rule */
         .lowercase-all, .lowercase-all * {
             text-transform: lowercase !important;
         }
@@ -131,29 +156,37 @@
     <!-- Background glowing orbs -->
     <div class="blob w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-purple-600 top-10 left-[-100px]"></div>
     <div class="blob w-[250px] h-[250px] md:w-[450px] md:h-[450px] bg-blue-600 bottom-10 right-[-100px]" style="animation-delay: -5s;"></div>
-    <div class="blob w-[300px] h-[300px] bg-pink-600 top-1/2 left-1/3" style="animation-delay: -10s; opacity: 0.1;"></div>
+    <div class="blob w-[300px] h-[300px] bg-pink-600 top-1/2 left-1/3" style="animation-delay: -10s; opacity: 0.08;"></div>
 
-    <!-- Header/Navigation -->
-    <header class="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row justify-between items-center gap-6 z-10">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-950/50">
+    <!-- Header / Navigation -->
+    <header class="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-6 z-10">
+        <div class="flex items-center gap-4">
+            <div class="w-11 h-11 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-950/40">
                 <i class="fa-solid fa-ghost text-lg text-white"></i>
             </div>
             <div>
                 <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                    прятки <span class="text-xs bg-purple-950 text-purple-300 px-2 py-0.5 rounded-full border border-purple-800/50">гамбит рп</span>
+                    прятки <span class="text-[10px] bg-purple-950/80 text-purple-300 px-2 py-0.5 rounded-full border border-purple-800/40">гамбит рп</span>
                 </h1>
-                <p class="text-[10px] text-gray-500 font-medium tracking-widest mt-0.5">система контроля и мониторинга</p>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                    <span class="text-[9px] text-gray-500 font-medium tracking-wider">система мониторинга</span>
+                    <span class="text-gray-700">•</span>
+                    <!-- Session Status Trigger Button -->
+                    <button onclick="openSyncStatusModal()" class="flex items-center gap-1 text-[9px] text-purple-400 hover:text-purple-300 transition-colors focus:outline-none">
+                        <span id="sync-status-indicator" class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
+                        <span id="sync-status-text">проверка связи...</span>
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Tab Controls -->
-        <div class="flex bg-neutral-900/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-md">
-            <button id="tab-players-btn" onclick="switchTab('players')" class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10">
-                <i class="fa-solid fa-users text-xs text-purple-400"></i> игроки
+        <div class="flex bg-neutral-900/50 p-1 rounded-2xl border border-white/5 backdrop-blur-md">
+            <button id="tab-players-btn" onclick="switchTab('players')" class="px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10">
+                <i class="fa-solid fa-users text-[10px] text-purple-400"></i> игроки
             </button>
-            <button id="tab-map-btn" onclick="switchTab('map')" class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white">
-                <i class="fa-solid fa-map-location-dot text-xs"></i> районы и подсказки
+            <button id="tab-map-btn" onclick="switchTab('map')" class="px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-map-location-dot text-[10px]"></i> районы и наводки
             </button>
         </div>
     </header>
@@ -170,28 +203,28 @@
                 <!-- Search -->
                 <div class="relative col-span-1 md:col-span-2">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-                    <input type="text" id="player-search" oninput="filterPlayers()" placeholder="поиск игрока по нику..." class="w-full bg-neutral-950/40 border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-purple-500/30 focus:ring-1 focus:ring-purple-500/30 transition-all backdrop-blur-md">
+                    <input type="text" id="player-search" oninput="filterPlayers()" placeholder="поиск игрока по нику..." class="w-full bg-neutral-950/40 border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-purple-500/30 focus:ring-1 focus:ring-purple-500/30 transition-all backdrop-blur-md">
                 </div>
 
                 <!-- Open Add Modal Button (Amoeba Style) -->
                 <div class="flex justify-end">
-                    <button onclick="openModal()" class="amoeba-btn text-white font-medium text-sm px-8 py-3.5 flex items-center gap-2 select-none">
-                        <i class="fa-solid fa-user-plus text-xs"></i> добавить игрока
+                    <button onclick="openModal()" class="amoeba-btn text-white font-medium text-xs px-8 py-3.5 flex items-center gap-2 select-none">
+                        <i class="fa-solid fa-user-plus text-[10px]"></i> добавить игрока
                     </button>
                 </div>
             </div>
 
             <!-- Loader State -->
             <div id="players-loading" class="flex flex-col items-center justify-center py-20 gap-4 text-gray-500">
-                <div class="w-8 h-8 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
-                <p class="text-xs">синхронизируем базу эло в реальном времени...</p>
+                <div class="w-7 h-7 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
+                <p class="text-[11px]">подключаемся к облачной базе эло...</p>
             </div>
 
             <!-- Empty State -->
             <div id="players-empty" class="hidden flex-col items-center justify-center py-20 text-gray-500 glass-panel rounded-3xl p-8 border border-white/5">
-                <i class="fa-solid fa-users-slash text-3xl mb-4 text-purple-900"></i>
-                <p class="text-sm font-medium">в базе пока нет участников</p>
-                <p class="text-[10px] text-gray-600 mt-1">добавьте первого игрока, чтобы начать трекинг эло</p>
+                <i class="fa-solid fa-users-slash text-2xl mb-4 text-purple-900/60"></i>
+                <p class="text-xs font-medium">в базе пока нет участников</p>
+                <p class="text-[9px] text-gray-600 mt-1">нажмите кнопку выше, чтобы занести первого игрока</p>
             </div>
 
             <!-- Players Grid -->
@@ -208,10 +241,10 @@
                 <div class="glass-panel p-6 rounded-3xl space-y-4">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h3 class="text-sm font-bold text-white tracking-wide">карта районов</h3>
-                            <p class="text-[10px] text-gray-500 mt-1">клик — убрать (зачеркнуть), 2-й клик — подозревать (подсветить), 3-й клик — сброс</p>
+                            <h3 class="text-xs font-bold text-white tracking-wide">карта районов</h3>
+                            <p class="text-[10px] text-gray-500 mt-1">клик — убрать (вычеркнуть), 2-й клик — подозревать (подсветить красным), 3-й клик — сброс</p>
                         </div>
-                        <button onclick="resetDistricts()" class="interactive-scale px-3 py-1.5 rounded-xl bg-red-950/30 hover:bg-red-950/50 text-red-400 text-[10px] font-bold border border-red-500/10 transition-all flex items-center gap-1.5">
+                        <button onclick="resetDistricts()" class="interactive-scale px-3 py-1.5 rounded-xl bg-red-950/20 hover:bg-red-950/40 text-red-400 text-[9px] font-bold border border-red-500/10 transition-all flex items-center gap-1.5">
                             <i class="fa-solid fa-rotate-left"></i> сбросить карту
                         </button>
                     </div>
@@ -224,8 +257,8 @@
 
                 <!-- Custom Note taking zone -->
                 <div class="glass-panel p-5 rounded-3xl">
-                    <h4 class="text-xs font-bold text-gray-400 tracking-wide mb-3">заметки по игре</h4>
-                    <textarea id="game-notes" placeholder="запишите приметы скина, тайминги или поведение игроков..." class="w-full h-24 bg-neutral-950/20 rounded-2xl p-3 text-xs text-gray-300 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-purple-500/30 border border-white/5 resize-none transition-all"></textarea>
+                    <h4 class="text-[10px] font-bold text-gray-500 tracking-wide mb-3">заметки по игре (локально)</h4>
+                    <textarea id="game-notes" oninput="saveLocalNotes()" placeholder="запишите сюда приметы скина, тайминги спавна или особое поведение игроков..." class="w-full h-24 bg-neutral-950/20 rounded-2xl p-3 text-xs text-gray-300 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-purple-500/20 border border-white/5 resize-none transition-all"></textarea>
                 </div>
             </div>
 
@@ -233,13 +266,13 @@
             <div class="lg:col-span-6 space-y-6">
                 <div class="glass-panel p-6 rounded-3xl space-y-5">
                     <div>
-                        <h3 class="text-sm font-bold text-white tracking-wide">умный генератор подсказок</h3>
-                        <p class="text-[10px] text-gray-500 mt-1">совместите два фактора, чтобы моментально передать наводку своей команде</p>
+                        <h3 class="text-xs font-bold text-white tracking-wide">умный генератор подсказок</h3>
+                        <p class="text-[10px] text-gray-500 mt-1">выберите по одному фактору из каждой категории, чтобы мгновенно передать наводку команде</p>
                     </div>
 
                     <!-- Group 1: Environment/Position -->
                     <div class="space-y-3">
-                        <span class="text-[10px] font-bold text-purple-400 tracking-wider">фактор 1: физическое окружение</span>
+                        <span class="text-[9px] font-bold text-purple-400 tracking-wider">фактор 1: физическое окружение</span>
                         <div class="flex flex-wrap gap-2" id="hint-group-1">
                             <!-- JS populated -->
                         </div>
@@ -247,33 +280,33 @@
 
                     <!-- Group 2: Player state -->
                     <div class="space-y-3">
-                        <span class="text-[10px] font-bold text-emerald-400 tracking-wider">фактор 2: поза и детали</span>
+                        <span class="text-[9px] font-bold text-emerald-400 tracking-wider">фактор 2: поза и детали</span>
                         <div class="flex flex-wrap gap-2" id="hint-group-2">
                             <!-- JS populated -->
                         </div>
                     </div>
 
                     <!-- Output Clue Box -->
-                    <div class="relative bg-neutral-950/50 rounded-2xl p-4 border border-white/5 overflow-hidden flex flex-col justify-center items-center gap-2 min-h-[110px] text-center">
+                    <div class="relative bg-neutral-950/40 rounded-2xl p-4 border border-white/5 overflow-hidden flex flex-col justify-center items-center gap-2 min-h-[110px] text-center">
                         <div class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-indigo-500/5 pointer-events-none"></div>
                         <span class="text-[9px] font-semibold text-gray-500 tracking-widest uppercase">сгенерированная наводка</span>
                         
-                        <div id="hint-result" class="text-sm font-semibold text-purple-200 transition-all duration-300">
+                        <div id="hint-result" class="text-xs font-semibold text-purple-200 transition-all duration-300">
                             выберите факторы выше
                         </div>
 
-                        <button id="add-hint-btn" onclick="addClueToLog()" class="hidden mt-2 interactive-scale px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg hover:shadow-purple-950/40 text-xs font-bold text-white transition-all border border-purple-500/10 flex items-center gap-2">
-                            <i class="fa-solid fa-paper-plane text-[10px]"></i> добавить наводку в лог
+                        <button id="add-hint-btn" onclick="addClueToLog()" class="hidden mt-2 interactive-scale px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg hover:shadow-purple-950/40 text-xs font-bold text-white transition-all border border-purple-500/10 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane text-[9px]"></i> добавить наводку в лог
                         </button>
                     </div>
 
                     <!-- Clue History Log (Synchronized) -->
-                    <div class="pt-2 border-t border-white/5">
+                    <div class="pt-3 border-t border-white/5">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] font-bold text-indigo-400 tracking-wider">активные наводки в логе</span>
+                            <span class="text-[9px] font-bold text-indigo-400 tracking-wider">активные наводки в логе</span>
                             <button onclick="clearAllHints()" class="text-[9px] text-gray-500 hover:text-red-400 transition-colors">очистить лог</button>
                         </div>
-                        <div id="hints-log" class="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+                        <div id="hints-log" class="space-y-2 max-h-[160px] overflow-y-auto pr-1 smooth-scroll">
                             <!-- Realtime clues rendered here -->
                         </div>
                     </div>
@@ -286,7 +319,7 @@
     <div id="add-player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
         <div class="glass-panel w-full max-w-md p-6 rounded-3xl space-y-6 border border-white/10 transform scale-95 transition-all duration-300">
             <div class="flex justify-between items-center">
-                <h3 class="text-sm font-extrabold text-white tracking-wide">добавить нового участника</h3>
+                <h3 class="text-xs font-bold text-white tracking-wide">добавить нового участника</h3>
                 <button onclick="closeModal()" class="interactive-scale text-gray-500 hover:text-white transition-colors">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
@@ -294,18 +327,18 @@
 
             <div class="space-y-4">
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-bold text-gray-500 tracking-wider">имя или никнейм</label>
-                    <input type="text" id="new-player-name" placeholder="например: ivan_petrov" class="w-full bg-neutral-950 border border-white/5 rounded-2xl py-3 px-4 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-purple-500/30 transition-all">
+                    <label class="text-[9px] font-bold text-gray-500 tracking-wider">имя или никнейм</label>
+                    <input type="text" id="new-player-name" placeholder="например: ivan_petrov" class="w-full bg-neutral-950 border border-white/5 rounded-2xl py-3 px-4 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-purple-500/30 transition-all">
                 </div>
 
                 <div class="space-y-1.5">
-                    <label class="text-[10px] font-bold text-gray-500 tracking-wider">начальное эло (elo)</label>
-                    <input type="number" id="new-player-elo" value="10" min="0" max="1000" class="w-full bg-neutral-950 border border-white/5 rounded-2xl py-3 px-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500/30 transition-all">
+                    <label class="text-[9px] font-bold text-gray-500 tracking-wider">начальное эло (elo)</label>
+                    <input type="number" id="new-player-elo" value="10" min="0" max="1000" class="w-full bg-neutral-950 border border-white/5 rounded-2xl py-3 px-4 text-xs text-gray-200 focus:outline-none focus:border-purple-500/30 transition-all">
                 </div>
             </div>
 
             <div class="flex gap-3 pt-2">
-                <button onclick="closeModal()" class="w-1/2 py-3 rounded-2xl bg-neutral-900 hover:bg-neutral-850 text-xs font-semibold text-gray-400 hover:text-white transition-all border border-white/5">
+                <button onclick="closeModal()" class="w-1/2 py-3 rounded-2xl bg-neutral-900/60 hover:bg-neutral-850 text-xs font-semibold text-gray-400 hover:text-white transition-all border border-white/5">
                     отмена
                 </button>
                 <button onclick="submitNewPlayer()" class="w-1/2 py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg hover:shadow-purple-950/40 text-xs font-bold text-white transition-all border border-purple-500/10">
@@ -315,14 +348,14 @@
         </div>
     </div>
 
-    <!-- CUSTOM CONFIRM DELETE MODAL (Replaces browser confirm) -->
+    <!-- CUSTOM CONFIRM DELETE MODAL (No alerts/confirm) -->
     <div id="delete-player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
         <div class="glass-panel w-full max-w-sm p-6 rounded-3xl space-y-6 border border-white/10 transform scale-95 transition-all duration-300">
             <div class="text-center space-y-2">
-                <div class="w-12 h-12 rounded-full bg-rose-950/50 border border-rose-500/30 flex items-center justify-center mx-auto text-rose-400 text-lg mb-1">
+                <div class="w-12 h-12 rounded-full bg-rose-950/40 border border-rose-500/30 flex items-center justify-center mx-auto text-rose-400 text-sm mb-1">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
-                <h3 class="text-sm font-extrabold text-white tracking-wide">удалить игрока?</h3>
+                <h3 class="text-xs font-extrabold text-white tracking-wide">удалить игрока?</h3>
                 <p id="delete-warning-text" class="text-xs text-gray-400">вы действительно хотите удалить участника из базы?</p>
             </div>
             <div class="flex gap-3">
@@ -336,6 +369,43 @@
         </div>
     </div>
 
+    <!-- CONNECTION & SYNC DETAILS MODAL -->
+    <div id="sync-status-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="glass-panel w-full max-w-md p-6 rounded-3xl space-y-5 border border-white/10 transform scale-95 transition-all duration-300">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xs font-bold text-white tracking-wide">статус синхронизации</h3>
+                <button onclick="closeSyncStatusModal()" class="interactive-scale text-gray-500 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3.5 text-xs text-gray-300">
+                <div class="flex justify-between p-2.5 bg-neutral-950/50 rounded-xl border border-white/5">
+                    <span class="text-gray-500">метод соединения</span>
+                    <span id="conn-method" class="text-purple-300 font-medium">проверка...</span>
+                </div>
+                <div class="flex justify-between p-2.5 bg-neutral-950/50 rounded-xl border border-white/5">
+                    <span class="text-gray-500">id вашей сессии (app id)</span>
+                    <span id="conn-session-id" class="text-indigo-300 font-mono text-[10px] select-all">определение...</span>
+                </div>
+                <div class="p-3.5 bg-neutral-900/40 rounded-2xl border border-white/5 space-y-2">
+                    <h4 class="text-[10px] font-bold text-white tracking-wider">инструкция для общей игры:</h4>
+                    <p class="text-[10px] text-gray-400 leading-relaxed">
+                        чтобы наводки и эло игроков обновлялись одновременно у всей вашей команды, все игроки должны находиться в одной сессии. скопируйте сессионный id выше и сверьте его с союзниками.
+                    </p>
+                </div>
+                <div class="p-3 bg-yellow-950/20 border border-yellow-500/10 text-[10px] rounded-2xl text-yellow-300 leading-relaxed space-y-1">
+                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> если горит желтый статус "локальный режим":</p>
+                    <p>убедитесь, что в консоли firebase включен вход "anonymous" (auth), а правила firestore rules разрешают чтение и запись (allow read, write: if true).</p>
+                </div>
+            </div>
+            
+            <button onclick="closeSyncStatusModal()" class="w-full py-3 rounded-2xl bg-neutral-900 text-xs font-semibold text-gray-400 hover:text-white transition-all border border-white/5">
+                закрыть окно
+            </button>
+        </div>
+    </div>
+
     <!-- NOTIFICATION TOAST -->
     <div id="toast" class="fixed bottom-6 right-6 z-50 bg-neutral-950/90 backdrop-blur-md border border-white/10 text-xs font-medium px-4 py-3 rounded-2xl text-purple-300 flex items-center gap-2 shadow-xl shadow-black/50 opacity-0 pointer-events-none transition-all duration-300">
         <i class="fa-solid fa-circle-check text-purple-400"></i>
@@ -343,21 +413,21 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="w-full max-w-7xl mx-auto px-6 py-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-gray-600 text-[10px] z-10">
+    <footer class="w-full max-w-7xl mx-auto px-6 py-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-gray-600 text-[9px] z-10">
         <div>
             прятки гамбит рп • разработан в минималистичном дизайне
         </div>
         <div class="flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            синхронизация активна
+            <span id="sync-pulse-dot" class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
+            <span id="sync-pulse-text">проверка соединения...</span>
         </div>
     </footer>
 
-    <!-- Firebase Standard Integration via modular scripts -->
+    <!-- Firebase Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { initializeFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, addDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Global variables given or generated
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'cloud-65583';
@@ -374,22 +444,84 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        
-        const db = initializeFirestore(app, {
-            experimentalForceLongPolling: true,
-            useFetchStreams: false
-        });
-        
-        const auth = getAuth(app);
+        let app, db, auth;
+        let authUser = null;
+        let isOnline = false;
 
-        // State holder
+        // In-memory local state fallback if database has issues/offline
         let players = [];
         let hintLog = [];
-        let authUser = null;
+        let districtStates = {};
         let deleteTargetId = null;
 
-        // UI Toast Notification
+        // Districts list definition
+        const districtsList = [
+            'спавн', 'вертолёт', 'пляж', 'центральный', 'фонтан', 
+            'гетто', 'элитный', 'промышленный', 'вода', 'подземка'
+        ];
+
+        // Hint generator state variables
+        const hintGroup1 = [
+            'темно', 'светло', 'высоко', 'низко', 'внутри', 
+            'снаружи', 'рядом', 'на объекте', 'за объектом', 'над объектом', 'под объектом'
+        ];
+
+        const hintGroup2 = [
+            'лежу', 'сижу', 'стою', 'оживлённо', 'отстранённо', 
+            'в текстурах', 'летаю', 'крыша', 'здание', 'проп'
+        ];
+
+        let selectedHint1 = '';
+        let selectedHint2 = '';
+
+        // Initialize basic district statuses
+        districtsList.forEach(d => {
+            districtStates[d] = 0;
+        });
+
+        // Initialize Local Storage Support
+        function initLocalStorageBackup() {
+            try {
+                const storedPlayers = localStorage.getItem(`gambit_players_${appId}`);
+                const storedHints = localStorage.getItem(`gambit_hints_${appId}`);
+                if (storedPlayers) {
+                    players = JSON.parse(storedPlayers);
+                } else {
+                    // Populate with basic mockup if completely blank
+                    players = [
+                        { id: 'mock_1', name: 'gambit_pro', elo: 15, createdAt: Date.now() - 100000 },
+                        { id: 'mock_2', name: 'skin_tracker', elo: 8, createdAt: Date.now() - 50000 }
+                    ];
+                }
+                if (storedHints) {
+                    hintLog = JSON.parse(storedHints);
+                }
+                const storedNotes = localStorage.getItem(`gambit_notes_${appId}`);
+                if (storedNotes) {
+                    document.getElementById('game-notes').value = storedNotes;
+                }
+            } catch (e) {
+                console.warn("localStorage backup unavailable:", e);
+            }
+        }
+
+        function saveLocalBackup() {
+            try {
+                localStorage.setItem(`gambit_players_${appId}`, JSON.stringify(players));
+                localStorage.setItem(`gambit_hints_${appId}`, JSON.stringify(hintLog));
+            } catch (e) {
+                console.warn("could not write to localStorage:", e);
+            }
+        }
+
+        window.saveLocalNotes = function() {
+            try {
+                const text = document.getElementById('game-notes').value;
+                localStorage.setItem(`gambit_notes_${appId}`, text);
+            } catch (e) {}
+        };
+
+        // Toast Helper
         window.showToast = function(text) {
             const toast = document.getElementById('toast');
             const message = document.getElementById('toast-message');
@@ -399,48 +531,112 @@
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.pointerEvents = 'none';
-            }, 2500);
+            }, 2300);
         };
 
-        // Authenticate User autonomously (Rule 3 with safe fallback)
-        async function authenticate() {
-            // Try custom token first, catching mismatches silently to avoid breaking the app console
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                try {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                    return; // Success
-                } catch (tokenErr) {
-                    console.log("initial auth token mismatch or expired, switching to anonymous auth...");
-                }
-            }
+        // Initializing UI status triggers
+        function setConnectionStatus(status) {
+            const dot = document.getElementById('sync-status-indicator');
+            const text = document.getElementById('sync-status-text');
+            const pulseDot = document.getElementById('sync-pulse-dot');
+            const pulseText = document.getElementById('sync-pulse-text');
+            const connMethod = document.getElementById('conn-method');
+            const connSession = document.getElementById('conn-session-id');
 
-            // Fallback to anonymous authentication
-            try {
-                await signInAnonymously(auth);
-            } catch (err) {
-                console.error("anonymous authentication failed:", err);
+            connSession.textContent = appId;
+
+            if (status === 'online') {
+                isOnline = true;
+                dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse";
+                text.textContent = "синхронизация активна";
+                pulseDot.className = "w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse";
+                pulseText.textContent = "база данных синхронизирована";
+                connMethod.textContent = "cloud firestore (online)";
+                connMethod.className = "text-emerald-400 font-semibold";
+            } else {
+                isOnline = false;
+                dot.className = "w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse";
+                text.textContent = "локальный режим";
+                pulseDot.className = "w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse";
+                pulseText.textContent = "локальный режим (без облака)";
+                connMethod.textContent = "local storage (offline)";
+                connMethod.className = "text-yellow-400 font-semibold";
             }
         }
 
-        // Initialize App & Sync Data
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                authUser = user;
-                initSync();
-            } else {
-                authenticate();
+        // Initialize Firebase SDK or switch to fallback
+        async function startSystem() {
+            initLocalStorageBackup();
+            
+            // Set session indicator to local while testing connection
+            setConnectionStatus('local');
+
+            try {
+                app = initializeApp(firebaseConfig);
+                db = initializeFirestore(app, {
+                    experimentalForceLongPolling: true,
+                    useFetchStreams: false
+                });
+                auth = getAuth(app);
+
+                // Run auth with a timeout mechanism (5 seconds) to prevent freezing in poor network environments
+                const authPromise = authenticate();
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("auth timeout")), 5000));
+                
+                await Promise.race([authPromise, timeoutPromise]);
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        authUser = user;
+                        initSync();
+                    } else {
+                        switchToLocalOnly();
+                    }
+                });
+
+            } catch (err) {
+                console.warn("firebase connection failed. entering offline mode.", err);
+                switchToLocalOnly();
             }
-        });
+        }
+
+        async function authenticate() {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                try {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                    return;
+                } catch (tokenErr) {
+                    console.warn("initial auth token mismatch or expired, switching to anonymous auth...");
+                }
+            }
+            try {
+                await signInAnonymously(auth);
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        function switchToLocalOnly() {
+            document.getElementById('players-loading').classList.add('hidden');
+            setConnectionStatus('local');
+            renderPlayers();
+            renderHintsLog();
+        }
 
         // Sync Firestore Real-time
         function initSync() {
-            if (!authUser) return;
+            if (!authUser || !db) {
+                switchToLocalOnly();
+                return;
+            }
 
-            // RULE 1 - STRICT PATH: /artifacts/{appId}/public/data/{collectionName}
+            // RULE 1 - STRICT PATH
             const colPlayersRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
             const colHintsRef = collection(db, 'artifacts', appId, 'public', 'data', 'hints');
             
-            // Listening to players updates with error callback
+            let isFirstLoadComplete = false;
+
+            // Sync players
             onSnapshot(colPlayersRef, (snapshot) => {
                 const updatedPlayers = [];
                 snapshot.forEach((doc) => {
@@ -449,21 +645,20 @@
                 
                 // Sort by ELO (high to low) in memory - Rule 2: NO COMPLEX QUERIES
                 players = updatedPlayers.sort((a, b) => b.elo - a.elo);
-                document.getElementById('players-loading').classList.add('hidden');
+                saveLocalBackup();
                 
+                document.getElementById('players-loading').classList.add('hidden');
+                setConnectionStatus('online');
                 renderPlayers();
+                isFirstLoadComplete = true;
             }, (error) => {
                 console.error("firestore players sync failed: ", error);
-                document.getElementById('players-loading').innerHTML = `
-                    <div class="text-red-400 text-xs text-center">
-                        <i class="fa-solid fa-triangle-exclamation text-lg mb-2"></i>
-                        <p>произошла ошибка синхронизации с базой.</p>
-                        <p class="text-[10px] text-gray-600 mt-1">${error.message}</p>
-                    </div>
-                `;
+                if (!isFirstLoadComplete) {
+                    switchToLocalOnly();
+                }
             });
 
-            // Listening to hints updates
+            // Sync clues
             onSnapshot(colHintsRef, (snapshot) => {
                 const updatedHints = [];
                 snapshot.forEach((doc) => {
@@ -471,13 +666,14 @@
                 });
                 // Sort newest first
                 hintLog = updatedHints.sort((a, b) => b.createdAt - a.createdAt);
+                saveLocalBackup();
                 renderHintsLog();
             }, (error) => {
                 console.error("firestore hints sync failed: ", error);
             });
         }
 
-        // Add Player to Cloud
+        // Add Player Logic
         window.submitNewPlayer = async function() {
             const nameInput = document.getElementById('new-player-name');
             const eloInput = document.getElementById('new-player-elo');
@@ -490,65 +686,101 @@
                 return;
             }
 
-            // Create uniform name format to avoid duplicates
             const cleanNameId = rawName.replace(/[^a-z0-9_]/g, '_');
 
-            if (!authUser) return;
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', cleanNameId);
+            if (isOnline && db && authUser) {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', cleanNameId);
+                try {
+                    const snap = await getDoc(docRef);
+                    if (snap.exists()) {
+                        showToast('такой игрок уже зарегистрирован');
+                        return;
+                    }
 
-            try {
-                // Check if already exists
-                const snap = await getDoc(docRef);
-                if (snap.exists()) {
-                    showToast('такой игрок уже зарегистрирован');
-                    return;
+                    await setDoc(docRef, {
+                        name: rawName,
+                        elo: eloVal,
+                        createdAt: Date.now()
+                    });
+
+                    closeModal();
+                    nameInput.value = '';
+                    showToast(`игрок ${rawName} добавлен`);
+                } catch (err) {
+                    console.error("error creating player in database:", err);
+                    showToast('ошибка облачного сохранения, пробуем локально');
+                    addLocalPlayer(cleanNameId, rawName, eloVal);
                 }
-
-                await setDoc(docRef, {
-                    name: rawName,
-                    elo: eloVal,
-                    createdAt: Date.now()
-                });
-
-                closeModal();
-                nameInput.value = '';
-                showToast(`игрок ${rawName} добавлен`);
-            } catch (err) {
-                console.error("error creating player:", err);
-                showToast('ошибка сохранения игрока');
+            } else {
+                addLocalPlayer(cleanNameId, rawName, eloVal);
             }
         };
 
-        // Modify Player ELO
-        window.adjustElo = async function(playerId, amount) {
-            const player = players.find(p => p.id === playerId);
-            if (!player) return;
+        function addLocalPlayer(id, name, elo) {
+            const exists = players.some(p => p.id === id);
+            if (exists) {
+                showToast('такой игрок уже зарегистрирован');
+                return;
+            }
+            players.push({
+                id: id,
+                name: name,
+                elo: elo,
+                createdAt: Date.now()
+            });
+            players.sort((a, b) => b.elo - a.elo);
+            saveLocalBackup();
+            closeModal();
+            document.getElementById('new-player-name').value = '';
+            showToast(`игрок ${name} добавлен локально`);
+            renderPlayers();
+        }
 
+        // Modify Player ELO with micro visual feedback animation
+        window.adjustElo = async function(playerId, amount) {
+            const playerIndex = players.findIndex(p => p.id === playerId);
+            if (playerIndex === -1) return;
+
+            const player = players[playerIndex];
             const newElo = Math.max(0, player.elo + amount);
             
-            // Level change feedback
-            const currentLevel = Math.min(10, Math.floor(player.elo / 10) + 1);
-            const nextLevel = Math.min(10, Math.floor(newElo / 10) + 1);
-            if (nextLevel > currentLevel) {
-                showToast(`${player.name} повысил уровень до ${nextLevel}!`);
+            // Apply scale animation on the badge
+            const badge = document.getElementById(`elo-badge-${playerId}`);
+            if (badge) {
+                const animClass = amount > 0 ? 'elo-pulse-up' : 'elo-pulse-down';
+                badge.classList.remove('elo-pulse-up', 'elo-pulse-down');
+                void badge.offsetWidth; // trigger reflow
+                badge.classList.add(animClass);
             }
 
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', playerId);
-            try {
-                await updateDoc(docRef, { elo: newElo });
-            } catch (err) {
-                console.error("error updating elo:", err);
-                showToast('ошибка обновления эло');
+            if (isOnline && db && authUser) {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', playerId);
+                try {
+                    await updateDoc(docRef, { elo: newElo });
+                } catch (err) {
+                    console.error("error updating elo in cloud:", err);
+                    updateLocalElo(playerId, newElo);
+                }
+            } else {
+                updateLocalElo(playerId, newElo);
             }
         };
 
-        // Custom Delete Confirmation Controls
+        function updateLocalElo(id, newElo) {
+            const idx = players.findIndex(p => p.id === id);
+            if (idx !== -1) {
+                players[idx].elo = newElo;
+                players.sort((a, b) => b.elo - a.elo);
+                saveLocalBackup();
+                renderPlayers();
+            }
+        }
+
+        // Custom Delete Modals
         window.deletePlayer = function(playerId, name) {
             deleteTargetId = playerId;
             const modal = document.getElementById('delete-player-modal');
             document.getElementById('delete-warning-text').textContent = `вы действительно хотите удалить участника ${name} из базы?`;
-            
-            // Show custom modal
             modal.classList.remove('pointer-events-none', 'opacity-0');
             modal.querySelector('div').classList.remove('scale-95');
         };
@@ -560,26 +792,37 @@
             modal.querySelector('div').classList.add('scale-95');
         };
 
-        // Execute actual deletion
         document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
             if (!deleteTargetId) return;
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', deleteTargetId);
-            try {
-                await deleteDoc(docRef);
-                showToast(`игрок удален`);
-                closeDeleteModal();
-            } catch (err) {
-                console.error("error deleting player:", err);
-                showToast('ошибка удаления игрока');
+
+            if (isOnline && db && authUser) {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', deleteTargetId);
+                try {
+                    await deleteDoc(docRef);
+                    showToast(`игрок удален`);
+                    closeDeleteModal();
+                } catch (err) {
+                    console.error("error deleting player in cloud:", err);
+                    deleteLocalPlayer(deleteTargetId);
+                }
+            } else {
+                deleteLocalPlayer(deleteTargetId);
             }
         });
 
-        // Render Players Leaderboard
+        function deleteLocalPlayer(id) {
+            players = players.filter(p => p.id !== id);
+            saveLocalBackup();
+            showToast(`игрок удален локально`);
+            closeDeleteModal();
+            renderPlayers();
+        }
+
+        // Render Players
         function renderPlayers() {
             const grid = document.getElementById('players-grid');
             const emptyState = document.getElementById('players-empty');
             
-            // Search filter
             const searchTerm = document.getElementById('player-search').value.toLowerCase().trim();
             const filtered = players.filter(p => p.name.toLowerCase().includes(searchTerm));
 
@@ -594,10 +837,8 @@
 
             grid.innerHTML = '';
             filtered.forEach(player => {
-                // Calculate faceit-style level (Max level 10, every 10 elo is next level)
+                // ELO progression calculation (1 level per 10 elo, max lvl 10)
                 const level = Math.min(10, Math.floor(player.elo / 10) + 1);
-                
-                // Calculate progress within the current level
                 let progressPercentage = 0;
                 if (level >= 10) {
                     progressPercentage = 100;
@@ -606,18 +847,14 @@
                     progressPercentage = Math.round(((player.elo - currentLevelBase) / 10) * 100);
                 }
 
-                // Level colors matching faceit aesthetic
-                let levelColor = 'bg-neutral-600 text-white'; // Default / Low
-                let levelBorder = 'border-neutral-700';
+                // ELO Level Badges styling
+                let levelColor = 'bg-neutral-600 text-white border-neutral-700';
                 if (level >= 4 && level <= 6) {
-                    levelColor = 'bg-emerald-600 text-white'; // Green
-                    levelBorder = 'border-emerald-500/20';
+                    levelColor = 'bg-emerald-600/90 text-white border-emerald-500/20';
                 } else if (level >= 7 && level <= 8) {
-                    levelColor = 'bg-amber-500 text-neutral-950 font-bold'; // Yellow
-                    levelBorder = 'border-amber-500/20';
+                    levelColor = 'bg-amber-500 text-neutral-950 font-bold border-amber-400/20';
                 } else if (level >= 9) {
-                    levelColor = 'bg-gradient-to-r from-red-500 to-purple-600 text-white font-extrabold shadow-lg shadow-purple-950/40'; // High level red-purple
-                    levelBorder = 'border-purple-500/30';
+                    levelColor = 'bg-gradient-to-r from-red-500 to-purple-600 text-white font-extrabold shadow-lg shadow-purple-950/40 border-purple-500/30';
                 }
 
                 const card = document.createElement('div');
@@ -625,23 +862,21 @@
                 card.innerHTML = `
                     <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl pointer-events-none"></div>
                     
-                    <!-- Player top details -->
                     <div class="flex justify-between items-start">
                         <div class="space-y-1">
-                            <h4 class="text-sm font-bold text-gray-200 tracking-wide break-all">${player.name}</h4>
-                            <span class="inline-block text-[10px] text-purple-400 font-medium">${player.elo} эло</span>
+                            <h4 class="text-xs font-bold text-gray-200 tracking-wide break-all">${player.name}</h4>
+                            <span id="elo-badge-${player.id}" class="inline-block text-[10px] text-purple-400 font-medium transition-all duration-300">${player.elo} эло</span>
                         </div>
                         <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-xl ${levelColor} flex items-center justify-center text-xs tracking-tighter shadow-sm border ${levelBorder}">
+                            <div class="w-8 h-8 rounded-xl ${levelColor} flex items-center justify-center text-xs tracking-tighter shadow-sm border">
                                 ${level}
                             </div>
                             <button onclick="deletePlayer('${player.id}', '${player.name}')" class="interactive-scale p-1.5 rounded-lg text-gray-600 hover:text-red-400 transition-colors">
-                                <i class="fa-solid fa-trash-can text-[10px]"></i>
+                                <i class="fa-solid fa-trash-can text-[9px]"></i>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Level Progress Bar -->
                     <div class="space-y-1.5">
                         <div class="flex justify-between text-[9px] font-semibold text-gray-500">
                             <span>уровень ${level}</span>
@@ -652,13 +887,12 @@
                         </div>
                     </div>
 
-                    <!-- ELO Adjusters -->
                     <div class="flex gap-2">
-                        <button onclick="adjustElo('${player.id}', -1)" class="w-1/2 py-2 rounded-2xl bg-neutral-900/50 hover:bg-red-950/20 text-xs font-semibold hover:text-red-400 border border-white/5 hover:border-red-500/20 transition-all flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-minus text-[9px]"></i> 1 эло
+                        <button onclick="adjustElo('${player.id}', -1)" class="w-1/2 py-2 rounded-2xl bg-neutral-900/50 hover:bg-red-950/20 text-[11px] font-semibold hover:text-red-400 border border-white/5 hover:border-red-500/20 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-minus text-[8px]"></i> 1 эло
                         </button>
-                        <button onclick="adjustElo('${player.id}', 1)" class="w-1/2 py-2 rounded-2xl bg-neutral-900/50 hover:bg-emerald-950/20 text-xs font-bold hover:text-emerald-400 border border-white/5 hover:border-emerald-500/20 transition-all flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-plus text-[9px]"></i> 1 эло
+                        <button onclick="adjustElo('${player.id}', 1)" class="w-1/2 py-2 rounded-2xl bg-neutral-900/50 hover:bg-emerald-950/20 text-[11px] font-bold hover:text-emerald-400 border border-white/5 hover:border-emerald-500/20 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-plus text-[8px]"></i> 1 эло
                         </button>
                     </div>
                 `;
@@ -666,12 +900,11 @@
             });
         }
 
-        // Search trigger
         window.filterPlayers = function() {
             renderPlayers();
         };
 
-        // Tab Switcher Logic
+        // Navigation Switcher
         window.switchTab = function(tabName) {
             const playersTabBtn = document.getElementById('tab-players-btn');
             const mapTabBtn = document.getElementById('tab-map-btn');
@@ -679,28 +912,22 @@
             const mapSec = document.getElementById('map-section');
 
             if (tabName === 'players') {
-                playersTabBtn.className = "px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10";
-                mapTabBtn.className = "px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white";
+                playersTabBtn.className = "px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10";
+                mapTabBtn.className = "px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white";
                 playersSec.classList.remove('hidden');
                 mapSec.classList.add('hidden');
             } else {
-                mapTabBtn.className = "px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10";
-                playersTabBtn.className = "px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white";
+                mapTabBtn.className = "px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10";
+                playersTabBtn.className = "px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white";
                 playersSec.classList.add('hidden');
                 mapSec.classList.remove('hidden');
+                // Re-render map elements to ensure correct dimensions
+                renderDistricts();
+                renderHintPills();
             }
         };
 
-        // Districts List & State Management
-        const districtsList = [
-            'спавн', 'вертолёт', 'пляж', 'центральный', 'фонтан', 
-            'гетто', 'элитный', 'промышленный', 'вода', 'подземка'
-        ];
-
-        // Store states: 0 = active, 1 = excluded, 2 = target
-        let districtStates = {};
-        districtsList.forEach(d => districtStates[d] = 0);
-
+        // Render Map Districts
         function renderDistricts() {
             const grid = document.getElementById('districts-grid');
             grid.innerHTML = '';
@@ -708,14 +935,14 @@
             districtsList.forEach(dist => {
                 const state = districtStates[dist];
                 let stateClass = '';
-                let icon = '<i class="fa-solid fa-location-crosshairs text-[10px] text-gray-600"></i>';
+                let icon = '<i class="fa-solid fa-location-crosshairs text-[9px] text-gray-600"></i>';
 
                 if (state === 1) {
                     stateClass = 'excluded';
-                    icon = '<i class="fa-solid fa-ban text-[10px] text-red-500/50"></i>';
+                    icon = '<i class="fa-solid fa-ban text-[9px] text-red-500/50"></i>';
                 } else if (state === 2) {
                     stateClass = 'target';
-                    icon = '<i class="fa-solid fa-triangle-exclamation text-[10px] text-rose-500 animate-pulse"></i>';
+                    icon = '<i class="fa-solid fa-triangle-exclamation text-[9px] text-rose-500 animate-pulse"></i>';
                 }
 
                 const card = document.createElement('div');
@@ -725,7 +952,7 @@
                     <span>${icon}</span>
                 `;
                 card.addEventListener('click', () => {
-                    // Cycle: 0 -> 1 -> 2 -> 0
+                    // Loop: 0 -> 1 -> 2 -> 0
                     districtStates[dist] = (districtStates[dist] + 1) % 3;
                     renderDistricts();
                 });
@@ -739,20 +966,7 @@
             showToast('карта районов сброшена');
         };
 
-        // Hint Generator Lists
-        const hintGroup1 = [
-            'темно', 'светло', 'высоко', 'низко', 'внутри', 
-            'снаружи', 'рядом', 'на объекте', 'за объектом', 'над объектом', 'под объектом'
-        ];
-
-        const hintGroup2 = [
-            'лежу', 'сижу', 'стою', 'оживлённо', 'отстранённо', 
-            'в текстурах', 'летаю', 'крыша', 'здание', 'проп'
-        ];
-
-        let selectedHint1 = '';
-        let selectedHint2 = '';
-
+        // Render Clue Generator Pills
         function renderHintPills() {
             const container1 = document.getElementById('hint-group-1');
             const container2 = document.getElementById('hint-group-2');
@@ -760,11 +974,11 @@
             container1.innerHTML = '';
             container2.innerHTML = '';
 
-            // Render Group 1
+            // Group 1
             hintGroup1.forEach(hint => {
                 const isActive = selectedHint1 === hint;
                 const pill = document.createElement('button');
-                pill.className = `interactive-scale px-3.5 py-2 rounded-xl text-[11px] font-medium border transition-all ${
+                pill.className = `interactive-scale px-3.5 py-2 rounded-xl text-[10px] font-medium border transition-all ${
                     isActive 
                     ? 'bg-purple-600/30 text-purple-200 border-purple-500/40 shadow-inner' 
                     : 'bg-neutral-900/40 text-gray-400 border-white/5 hover:border-white/10 hover:text-white'
@@ -778,11 +992,11 @@
                 container1.appendChild(pill);
             });
 
-            // Render Group 2
+            // Group 2
             hintGroup2.forEach(hint => {
                 const isActive = selectedHint2 === hint;
                 const pill = document.createElement('button');
-                pill.className = `interactive-scale px-3.5 py-2 rounded-xl text-[11px] font-medium border transition-all ${
+                pill.className = `interactive-scale px-3.5 py-2 rounded-xl text-[10px] font-medium border transition-all ${
                     isActive 
                     ? 'bg-emerald-600/30 text-emerald-200 border-emerald-500/40 shadow-inner' 
                     : 'bg-neutral-900/40 text-gray-400 border-white/5 hover:border-white/10 hover:text-white'
@@ -797,7 +1011,6 @@
             });
         }
 
-        // Format and show dynamic combined hint
         function updateHintOutput() {
             const outText = document.getElementById('hint-result');
             const addBtn = document.getElementById('add-hint-btn');
@@ -806,7 +1019,7 @@
                 outText.innerHTML = `
                     <div class="flex items-center gap-3 justify-center">
                         <span class="text-purple-300 font-bold bg-purple-950/50 px-3 py-1.5 rounded-xl border border-purple-500/10">${selectedHint1}</span>
-                        <span class="text-gray-600 text-xs">⟷</span>
+                        <span class="text-gray-600 text-[10px]">⟷</span>
                         <span class="text-emerald-300 font-bold bg-emerald-950/50 px-3 py-1.5 rounded-xl border border-emerald-500/10">${selectedHint2}</span>
                     </div>
                 `;
@@ -824,34 +1037,51 @@
             }
         }
 
-        // Push the selected clues down to the synchronized log and reset selections immediately
+        // Send created clue to synced log and reset selectors instantly
         window.addClueToLog = async function() {
             if (!selectedHint1 || !selectedHint2) return;
-            if (!authUser) return;
 
             const finalHintText = `${selectedHint1} + ${selectedHint2}`;
 
-            try {
-                // Rule 1 strict path
-                const hintsCol = collection(db, 'artifacts', appId, 'public', 'data', 'hints');
-                await addDoc(hintsCol, {
-                    text: finalHintText,
-                    createdAt: Date.now()
-                });
-
-                // Clear selections so user can quickly type the next one
-                selectedHint1 = '';
-                selectedHint2 = '';
-                renderHintPills();
-                updateHintOutput();
-                showToast('наводка добавлена в лог');
-            } catch (err) {
-                console.error("error adding hint to cloud log: ", err);
-                showToast('ошибка добавления наводки');
+            if (isOnline && db && authUser) {
+                try {
+                    const hintsCol = collection(db, 'artifacts', appId, 'public', 'data', 'hints');
+                    await addDoc(hintsCol, {
+                        text: finalHintText,
+                        createdAt: Date.now()
+                    });
+                    resetHintSelections();
+                    showToast('наводка добавлена в лог');
+                } catch (err) {
+                    console.error("error adding hint to cloud log: ", err);
+                    showToast('ошибка сохранения наводки в облако, добавлено локально');
+                    addLocalHint(finalHintText);
+                }
+            } else {
+                addLocalHint(finalHintText);
             }
         };
 
-        // Render synced hint logs
+        function addLocalHint(text) {
+            hintLog.unshift({
+                id: 'local_' + Date.now(),
+                text: text,
+                createdAt: Date.now()
+            });
+            saveLocalBackup();
+            resetHintSelections();
+            showToast('наводка добавлена локально');
+            renderHintsLog();
+        }
+
+        function resetHintSelections() {
+            selectedHint1 = '';
+            selectedHint2 = '';
+            renderHintPills();
+            updateHintOutput();
+        }
+
+        // Render Clue Logs
         function renderHintsLog() {
             const logContainer = document.getElementById('hints-log');
             if (hintLog.length === 0) {
@@ -862,14 +1092,15 @@
             }
 
             logContainer.innerHTML = '';
-            // Display maximum of 8 latest hints to keep layout compact and clean
-            const visibleLog = hintLog.slice(0, 8);
+            // Display maximum of 12 logs
+            const visibleLog = hintLog.slice(0, 12);
             
-            visibleLog.forEach((item) => {
+            visibleLog.forEach((item, index) => {
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between bg-neutral-950/40 border border-white/5 rounded-xl p-2.5 hover:bg-neutral-950/60 transition-colors';
+                // Added brief flashing animation for the newly added item (index 0)
+                const isNew = index === 0 ? 'border-purple-500/30 shadow-md shadow-purple-950/20' : 'border-white/5';
+                div.className = `flex items-center justify-between bg-neutral-950/40 border rounded-xl p-2.5 hover:bg-neutral-950/60 transition-all duration-300 ${isNew}`;
                 
-                // Formulate simple relative format or time
                 const timeStr = new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
                 
                 div.innerHTML = `
@@ -879,18 +1110,21 @@
                     </div>
                     <div class="flex items-center gap-1">
                         <button onclick="copyHintText('${item.text}')" class="p-1 text-gray-500 hover:text-white transition-colors" title="скопировать">
-                            <i class="fa-solid fa-copy text-[10px]"></i>
+                            <i class="fa-solid fa-copy text-[9px]"></i>
                         </button>
                         <button onclick="deleteSingleHint('${item.id}')" class="p-1 text-gray-500 hover:text-rose-400 transition-colors" title="удалить">
-                            <i class="fa-solid fa-xmark text-[10px]"></i>
+                            <i class="fa-solid fa-xmark text-[9px]"></i>
                         </button>
                     </div>
                 `;
                 logContainer.appendChild(div);
             });
+
+            // Automatically scroll log container to the top to show newest clue
+            logContainer.scrollTop = 0;
         }
 
-        // Copy clue to clipboard utilizing fallback mechanism
+        // Copy Clue to Clipboard
         window.copyHintText = function(text) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -909,35 +1143,56 @@
             }
         };
 
-        // Delete a single hint log entry
+        // Delete Single Hint Log Item
         window.deleteSingleHint = async function(hintId) {
-            if (!authUser) return;
-            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'hints', hintId);
-            try {
-                await deleteDoc(docRef);
-                showToast('наводка удалена из лога');
-            } catch (err) {
-                console.error("error deleting hint: ", err);
+            if (isOnline && db && authUser) {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'hints', hintId);
+                try {
+                    await deleteDoc(docRef);
+                    showToast('наводка удалена из лога');
+                } catch (err) {
+                    console.error("error deleting hint in cloud: ", err);
+                    deleteLocalHint(hintId);
+                }
+            } else {
+                deleteLocalHint(hintId);
             }
         };
 
-        // Clear all elements in the synchronized hint log
+        function deleteLocalHint(id) {
+            hintLog = hintLog.filter(h => h.id !== id);
+            saveLocalBackup();
+            showToast('наводка удалена локально');
+            renderHintsLog();
+        }
+
+        // Clear All Hints in Sync Log
         window.clearAllHints = async function() {
-            if (!authUser) return;
-            // Iterate and delete existing logs sequentially to maintain simplicity
-            try {
-                const promises = hintLog.map(item => {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'hints', item.id);
-                    return deleteDoc(docRef);
-                });
-                await Promise.all(promises);
-                showToast('лог наводок очищен');
-            } catch (err) {
-                console.error("error clearing hints log: ", err);
+            if (isOnline && db && authUser) {
+                try {
+                    const promises = hintLog.map(item => {
+                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'hints', item.id);
+                        return deleteDoc(docRef);
+                    });
+                    await Promise.all(promises);
+                    showToast('лог наводок очищен в облаке');
+                } catch (err) {
+                    console.error("error clearing hints in cloud: ", err);
+                    clearLocalHints();
+                }
+            } else {
+                clearLocalHints();
             }
         };
 
-        // Modal Controls
+        function clearLocalHints() {
+            hintLog = [];
+            saveLocalBackup();
+            showToast('лог наводок полностью очищен');
+            renderHintsLog();
+        }
+
+        // Modal Handlers
         window.openModal = function() {
             const modal = document.getElementById('add-player-modal');
             modal.classList.remove('pointer-events-none', 'opacity-0');
@@ -950,10 +1205,23 @@
             modal.querySelector('div').classList.add('scale-95');
         };
 
-        // Global Onload Hook
+        window.openSyncStatusModal = function() {
+            const modal = document.getElementById('sync-status-modal');
+            modal.classList.remove('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.remove('scale-95');
+        };
+
+        window.closeSyncStatusModal = function() {
+            const modal = document.getElementById('sync-status-modal');
+            modal.classList.add('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+        };
+
+        // System Startup
         window.onload = function() {
             renderDistricts();
             renderHintPills();
+            startSystem();
         };
 
     </script>
