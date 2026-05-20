@@ -168,9 +168,8 @@
                     прятки <span class="text-[10px] bg-purple-950/80 text-purple-300 px-2 py-0.5 rounded-full border border-purple-800/40">гамбит рп</span>
                 </h1>
                 <div class="flex items-center gap-1.5 mt-0.5">
-                    <span class="text-[9px] text-gray-500 font-medium tracking-wider">система мониторинга</span>
+                    <span class="text-[9px] text-gray-500 font-medium tracking-wider">облачный мониторинг</span>
                     <span class="text-gray-700">•</span>
-                    <!-- Session / Connection info popup button -->
                     <button onclick="openSyncStatusModal()" class="flex items-center gap-1 text-[9px] text-purple-400 hover:text-purple-300 transition-colors focus:outline-none">
                         <span id="sync-status-indicator" class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse"></span>
                         <span id="sync-status-text">проверка связи...</span>
@@ -214,7 +213,7 @@
             <!-- Preloader spinner -->
             <div id="players-loading" class="flex flex-col items-center justify-center py-20 gap-4 text-gray-500">
                 <div class="w-7 h-7 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
-                <p class="text-[11px]">подключаемся к облачной базе эло...</p>
+                <p class="text-[11px]">подключаемся к базе данных...</p>
             </div>
 
             <!-- Empty Database screen state -->
@@ -385,18 +384,14 @@
                     <span id="conn-method" class="text-purple-300 font-medium">проверка...</span>
                 </div>
                 <div class="flex justify-between p-2.5 bg-neutral-950/50 rounded-xl border border-white/5">
-                    <span class="text-gray-500">id вашей сессии (app id)</span>
+                    <span class="text-gray-500">id проекта (project id)</span>
                     <span id="conn-session-id" class="text-indigo-300 font-mono text-[10px] select-all">определение...</span>
                 </div>
                 <div class="p-3.5 bg-neutral-900/40 rounded-2xl border border-white/5 space-y-2">
                     <h4 class="text-[10px] font-bold text-white tracking-wider">инструкция для совместной игры:</h4>
                     <p class="text-[10px] text-gray-400 leading-relaxed">
-                        чтобы наводки, зачеркивания районов, общие заметки и эло игроков обновлялись мгновенно у всей вашей команды, все игроки должны находиться в одной сессии. скопируйте сессионный id выше и сверьте его с союзниками.
+                        чтобы наводки, зачеркивания районов, общие заметки и эло игроков обновлялись мгновенно у всей вашей команды, все игроки должны находиться в одной базе данных.
                     </p>
-                </div>
-                <div class="p-3 bg-yellow-950/20 border border-yellow-500/10 text-[10px] rounded-2xl text-yellow-300 leading-relaxed space-y-1">
-                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> если горит желтый статус "локальный режим":</p>
-                    <p>убедитесь, что в консоли firebase включен вход "anonymous" (auth), а правила firestore rules разрешают чтение и запись (allow read, write: if true) для всего дерева.</p>
                 </div>
             </div>
             
@@ -425,27 +420,22 @@
 
     <!-- Firestore / Auth Web Scripts -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { initializeFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, deleteDoc, onSnapshot, collection, addDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
 
-        // Global variables initialized
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'cloud-65583';
-        
-        // Supplied Verified Firebase Config
+        // Verified Firebase Config from hideandseek-5999c
         const firebaseConfig = {
-            apiKey: "AIzaSyBhr50uCwWCvaHlTrCJ9ZrIPStzoFuXYCY",
-            authDomain: "cloud-65583.firebaseapp.com",
-            projectId: "cloud-65583",
-            storageBucket: "cloud-65583.firebasestorage.app",
-            messagingSenderId: "740628528619",
-            appId: "1:740628528619:web:3d1b8e0887e2d7080aedae",
-            measurementId: "G-G4R39QFH29"
+            apiKey: "AIzaSyBQdOYrSQbBmFzEBO2xub9upgZjc8MG14I",
+            authDomain: "hideandseek-5999c.firebaseapp.com",
+            projectId: "hideandseek-5999c",
+            storageBucket: "hideandseek-5999c.appspot.com",
+            messagingSenderId: "1011795255498",
+            appId: "1:1011795255498:web:5fe99fd83975bb9daf5433"
         };
 
         // Firebase modules state variables
         let app, db, auth;
-        let authUser = null;
         let isOnline = false;
 
         // Fallback local memory values
@@ -483,20 +473,20 @@
         // Local storage initial fallbacks
         function initLocalStorageBackup() {
             try {
-                const storedPlayers = localStorage.getItem(`gambit_players_${appId}`);
-                const storedHints = localStorage.getItem(`gambit_hints_${appId}`);
+                const storedPlayers = localStorage.getItem(`gambit_players`);
+                const storedHints = localStorage.getItem(`gambit_hints`);
                 if (storedPlayers) {
                     players = JSON.parse(storedPlayers);
                 } else {
                     players = [
-                        { id: 'player_example_1', name: 'gambit_explorer', elo: 15, createdAt: Date.now() - 100000 },
-                        { id: 'player_example_2', name: 'tracker_bot', elo: 8, createdAt: Date.now() - 50000 }
+                        { id: 'player_example_1', name: 'собака_сутулая', elo: 15, createdAt: Date.now() - 100000 },
+                        { id: 'player_example_2', name: 'лекси', elo: 7, createdAt: Date.now() - 50000 }
                     ];
                 }
                 if (storedHints) {
                     hintLog = JSON.parse(storedHints);
                 }
-                const storedNotes = localStorage.getItem(`gambit_notes_${appId}`);
+                const storedNotes = localStorage.getItem(`gambit_notes`);
                 if (storedNotes) {
                     document.getElementById('game-notes').value = storedNotes;
                 }
@@ -508,8 +498,8 @@
         // Write changes to local browser backup
         function saveLocalBackup() {
             try {
-                localStorage.setItem(`gambit_players_${appId}`, JSON.stringify(players));
-                localStorage.setItem(`gambit_hints_${appId}`, JSON.stringify(hintLog));
+                localStorage.setItem(`gambit_players`, JSON.stringify(players));
+                localStorage.setItem(`gambit_hints`, JSON.stringify(hintLog));
             } catch (e) {
                 console.warn("could not write to browser localstorage:", e);
             }
@@ -537,7 +527,7 @@
             const connMethod = document.getElementById('conn-method');
             const connSession = document.getElementById('conn-session-id');
 
-            connSession.textContent = appId;
+            connSession.textContent = firebaseConfig.projectId;
 
             if (status === 'online') {
                 isOnline = true;
@@ -565,47 +555,16 @@
 
             try {
                 app = initializeApp(firebaseConfig);
-                // Connect database with high timeout compatibility bypass inside frame policies (Long Polling)
-                db = initializeFirestore(app, {
-                    experimentalForceLongPolling: true,
-                    useFetchStreams: false
-                });
+                db = getFirestore(app);
                 auth = getAuth(app);
 
-                const authPromise = authenticate();
-                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("auth timeout")), 4000));
-                
-                await Promise.race([authPromise, timeoutPromise]);
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        authUser = user;
-                        initSync();
-                    } else {
-                        switchToLocalOnly();
-                    }
-                });
-
+                // Authenticate and start listeners
+                await signInAnonymously(auth);
+                setConnectionStatus('online');
+                initSync();
             } catch (err) {
                 console.warn("firebase server handshake skipped. running locally.", err);
                 switchToLocalOnly();
-            }
-        }
-
-        // Authenticate anonymously or via custom context token safely
-        async function authenticate() {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                try {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                    return;
-                } catch (tokenErr) {
-                    console.debug("custom token not matching credentials, falling back to clean anonymous...");
-                }
-            }
-            try {
-                await signInAnonymously(auth);
-            } catch (err) {
-                throw err;
             }
         }
 
@@ -618,18 +577,18 @@
             renderDistricts();
         }
 
-        // Setup Firestore listeners (Sync Loop)
+        // Setup Firestore listeners (Sync Loop with direct root-level collections)
         function initSync() {
-            if (!authUser || !db) {
+            if (!db) {
                 switchToLocalOnly();
                 return;
             }
 
-            // RULE 1 - STRICT PATH CONFIG
-            const colPlayersRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
-            const colHintsRef = collection(db, 'artifacts', appId, 'public', 'data', 'hints');
-            const docDistrictsRef = doc(db, 'artifacts', appId, 'public', 'data', 'mapState', 'districts');
-            const docNotesRef = doc(db, 'artifacts', appId, 'public', 'data', 'notes', 'sharedNotes');
+            // Direct ROOT-LEVEL paths as shown on your control panel
+            const colPlayersRef = collection(db, 'players');
+            const colHintsRef = collection(db, 'hints_meta');
+            const docDistrictsRef = doc(db, 'global', 'map');
+            const docNotesRef = doc(db, 'global', 'notes');
             
             let isFirstLoadComplete = false;
 
@@ -640,7 +599,6 @@
                     updatedPlayers.push({ id: doc.id, ...doc.data() });
                 });
                 
-                // Rule 2 - In-Memory sorting
                 players = updatedPlayers.sort((a, b) => b.elo - a.elo);
                 saveLocalBackup();
                 
@@ -688,7 +646,6 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     const notesField = document.getElementById('game-notes');
-                    // Avoid overriding input characters if current client is actively typing inside the block
                     if (document.activeElement !== notesField) {
                         notesField.value = data.text || '';
                     }
@@ -698,7 +655,7 @@
             });
         }
 
-        // Submit player document to database
+        // Submit player document to database using auto-generated IDs
         window.submitNewPlayer = async function() {
             const nameInput = document.getElementById('new-player-name');
             const eloInput = document.getElementById('new-player-elo');
@@ -711,18 +668,11 @@
                 return;
             }
 
-            const cleanNameId = rawName.replace(/[^a-z0-9_]/g, '_');
-
-            if (isOnline && db && authUser) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', cleanNameId);
+            if (isOnline && db) {
+                // We use addDoc directly on root collection "players" to get auto-generated document keys
+                const colRef = collection(db, 'players');
                 try {
-                    const snap = await getDoc(docRef);
-                    if (snap.exists()) {
-                        showToast('такой игрок уже зарегистрирован');
-                        return;
-                    }
-
-                    await setDoc(docRef, {
+                    await addDoc(colRef, {
                         name: rawName,
                         elo: eloVal,
                         createdAt: Date.now()
@@ -734,21 +684,17 @@
                 } catch (err) {
                     console.error("error submitting database player doc:", err);
                     showToast('ошибка облака, пробуем локальный режим');
-                    addLocalPlayer(cleanNameId, rawName, eloVal);
+                    addLocalPlayer(rawName, eloVal);
                 }
             } else {
-                addLocalPlayer(cleanNameId, rawName, eloVal);
+                addLocalPlayer(rawName, eloVal);
             }
         };
 
-        function addLocalPlayer(id, name, elo) {
-            const exists = players.some(p => p.id === id);
-            if (exists) {
-                showToast('такой игрок уже зарегистрирован');
-                return;
-            }
+        function addLocalPlayer(name, elo) {
+            const cleanId = 'local_' + Date.now();
             players.push({
-                id: id,
+                id: cleanId,
                 name: name,
                 elo: elo,
                 createdAt: Date.now()
@@ -773,12 +719,12 @@
             if (badge) {
                 const animClass = amount > 0 ? 'elo-pulse-up' : 'elo-pulse-down';
                 badge.classList.remove('elo-pulse-up', 'elo-pulse-down');
-                void badge.offsetWidth; // reload dom styling flow
+                void badge.offsetWidth; 
                 badge.classList.add(animClass);
             }
 
-            if (isOnline && db && authUser) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', playerId);
+            if (isOnline && db) {
+                const docRef = doc(db, 'players', playerId);
                 try {
                     await updateDoc(docRef, { elo: newElo });
                 } catch (err) {
@@ -819,8 +765,8 @@
         document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
             if (!deleteTargetId) return;
 
-            if (isOnline && db && authUser) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', deleteTargetId);
+            if (isOnline && db) {
+                const docRef = doc(db, 'players', deleteTargetId);
                 try {
                     await deleteDoc(docRef);
                     showToast(`игрок удален`);
@@ -861,7 +807,6 @@
 
             grid.innerHTML = '';
             filtered.forEach(player => {
-                // Calculation for звание/level (progresses every 10 elo, ceiling level is 10)
                 const level = Math.min(10, Math.floor(player.elo / 10) + 1);
                 let progressPercentage = 0;
                 if (level >= 10) {
@@ -976,13 +921,12 @@
                 `;
                 
                 card.onclick = async function() {
-                    // Cycles: 0 (default) -> 1 (excluded) -> 2 (target suspect) -> 0
                     const nextState = (state + 1) % 3;
                     districtStates[dist] = nextState;
                     renderDistricts();
 
-                    if (isOnline && db && authUser) {
-                        const docDistrictsRef = doc(db, 'artifacts', appId, 'public', 'data', 'mapState', 'districts');
+                    if (isOnline && db) {
+                        const docDistrictsRef = doc(db, 'global', 'map');
                         try {
                             await setDoc(docDistrictsRef, districtStates, { merge: true });
                         } catch (err) {
@@ -1002,8 +946,8 @@
             districtsList.forEach(d => districtStates[d] = 0);
             renderDistricts();
 
-            if (isOnline && db && authUser) {
-                const docDistrictsRef = doc(db, 'artifacts', appId, 'public', 'data', 'mapState', 'districts');
+            if (isOnline && db) {
+                const docDistrictsRef = doc(db, 'global', 'map');
                 try {
                     await setDoc(docDistrictsRef, districtStates);
                     showToast('карта районов сброшена у всей команды');
@@ -1022,18 +966,17 @@
             const text = notesField.value;
             const syncIndicator = document.getElementById('notes-sync-indicator');
 
-            // Save locally
             try {
-                localStorage.setItem(`gambit_notes_${appId}`, text);
+                localStorage.setItem(`gambit_notes`, text);
             } catch (e) {}
 
-            if (isOnline && db && authUser) {
+            if (isOnline && db) {
                 syncIndicator.classList.remove('hidden');
                 syncIndicator.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> сохраняем...';
 
                 clearTimeout(notesSaveTimeout);
                 notesSaveTimeout = setTimeout(async () => {
-                    const docNotesRef = doc(db, 'artifacts', appId, 'public', 'data', 'notes', 'sharedNotes');
+                    const docNotesRef = doc(db, 'global', 'notes');
                     try {
                         await setDoc(docNotesRef, {
                             text: text,
@@ -1045,7 +988,7 @@
                         console.error("failed submitting shared notes:", err);
                         syncIndicator.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-rose-500"></i> ошибка';
                     }
-                }, 1000); // 1s Debounce delay to prevent character cursor jumps
+                }, 1000); 
             }
         };
 
@@ -1057,7 +1000,6 @@
             container1.innerHTML = '';
             container2.innerHTML = '';
 
-            // Render environmental category pills
             hintGroup1.forEach(hint => {
                 const isActive = selectedHint1 === hint;
                 const pill = document.createElement('button');
@@ -1075,7 +1017,6 @@
                 container1.appendChild(pill);
             });
 
-            // Render postural category pills
             hintGroup2.forEach(hint => {
                 const isActive = selectedHint2 === hint;
                 const pill = document.createElement('button');
@@ -1121,15 +1062,15 @@
             }
         }
 
-        // Submit constructed clue to shared list
+        // Submit constructed clue to shared list (/hints_meta root-level collection)
         window.addClueToLog = async function() {
             if (!selectedHint1 || !selectedHint2) return;
 
             const finalHintText = `${selectedHint1} + ${selectedHint2}`;
 
-            if (isOnline && db && authUser) {
+            if (isOnline && db) {
                 try {
-                    const hintsCol = collection(db, 'artifacts', appId, 'public', 'data', 'hints');
+                    const hintsCol = collection(db, 'hints_meta');
                     await addDoc(hintsCol, {
                         text: finalHintText,
                         createdAt: Date.now()
@@ -1226,8 +1167,8 @@
 
         // Delete a single logged clue item
         window.deleteSingleHint = async function(hintId) {
-            if (isOnline && db && authUser) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'hints', hintId);
+            if (isOnline && db) {
+                const docRef = doc(db, 'hints_meta', hintId);
                 try {
                     await deleteDoc(docRef);
                     showToast('наводка удалена из лога');
@@ -1249,10 +1190,10 @@
 
         // Clear all clue items entirely
         window.clearAllHints = async function() {
-            if (isOnline && db && authUser) {
+            if (isOnline && db) {
                 try {
                     const promises = hintLog.map(item => {
-                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'hints', item.id);
+                        const docRef = doc(db, 'hints_meta', item.id);
                         return deleteDoc(docRef);
                     });
                     await Promise.all(promises);
