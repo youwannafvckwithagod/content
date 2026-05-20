@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>прятки • гамбитрп</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030014;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.2);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 85, 247, 0.4);
+        }
+
+        /* Glowing amoeba background blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.25;
+            animation: blob-float 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes blob-float {
+            0% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(40px, -60px) scale(1.2); }
+            100% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Amoeba Button Styling */
+        .amoeba-btn {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.6) 0%, rgba(79, 70, 229, 0.6) 100%);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 8s ease-in-out infinite alternate;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .amoeba-btn:hover {
+            border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes morph {
+            0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; }
+            100% { border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%; }
+        }
+
+        /* Glassmorphism Cards */
+        .glass-panel {
+            background: rgba(10, 8, 28, 0.65);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(168, 85, 247, 0.15);
+            box-shadow: 0 10px 30px -10px rgba(168, 85, 247, 0.1);
+        }
+
+        /* Micro-interactions */
+        .interactive-scale {
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+        .interactive-scale:active {
+            transform: scale(0.95);
+        }
+
+        /* District Card States */
+        .district-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .district-card.excluded {
+            opacity: 0.15;
+            text-decoration: line-through;
+            transform: scale(0.95);
+            border-color: transparent !important;
+            box-shadow: none !important;
+        }
+        .district-card.target {
+            border-color: rgba(239, 68, 68, 0.6) !important;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.25) !important;
+            animation: pulse-border 2s infinite alternate;
+        }
+
+        @keyframes pulse-border {
+            0% { border-color: rgba(239, 68, 68, 0.4); }
+            100% { border-color: rgba(239, 68, 68, 0.85); }
+        }
+
+        /* Lowercase style override for beautiful uniform minimalist aesthetic */
+        .lowercase-all, .lowercase-all * {
+            text-transform: lowercase !important;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col lowercase-all">
+
+    <!-- Background glowing orbs -->
+    <div class="blob w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-purple-600 top-10 left-[-100px]"></div>
+    <div class="blob w-[250px] h-[250px] md:w-[450px] md:h-[450px] bg-blue-600 bottom-10 right-[-100px]" style="animation-delay: -5s;"></div>
+    <div class="blob w-[300px] h-[300px] bg-pink-600 top-1/2 left-1/3" style="animation-delay: -10s; opacity: 0.1;"></div>
+
+    <!-- Header/Navigation -->
+    <header class="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row justify-between items-center gap-6 z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-purple-950/50">
+                <i class="fa-solid fa-ghost text-lg text-white"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                    прятки <span class="text-xs bg-purple-950 text-purple-300 px-2 py-0.5 rounded-full border border-purple-800/50">гамбит рп</span>
+                </h1>
+                <p class="text-[10px] text-gray-500 font-medium tracking-widest mt-0.5">система контроля и мониторинга</p>
+            </div>
+        </div>
+
+        <!-- Tab Controls -->
+        <div class="flex bg-neutral-900/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-md">
+            <button id="tab-players-btn" onclick="switchTab('players')" class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10">
+                <i class="fa-solid fa-users text-xs text-purple-400"></i> игроки
+            </button>
+            <button id="tab-map-btn" onclick="switchTab('map')" class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-map-location-dot text-xs"></i> районы и подсказки
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-6 pb-12 z-10">
+        
+        <!-- SECTION 1: PLAYERS TAB -->
+        <section id="players-section" class="space-y-8 animate-fade-in">
+            
+            <!-- Controls Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                
+                <!-- Search -->
+                <div class="relative col-span-1 md:col-span-2">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+                    <input type="text" id="player-search" oninput="filterPlayers()" placeholder="поиск игрока по нику..." class="w-full bg-neutral-950/40 border border-white/5 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-purple-500/30 focus:ring-1 focus:ring-purple-500/30 transition-all backdrop-blur-md">
+                </div>
+
+                <!-- Open Add Modal Button (Amoeba Style) -->
+                <div class="flex justify-end">
+                    <button onclick="openModal()" class="amoeba-btn text-white font-medium text-sm px-8 py-3.5 flex items-center gap-2 select-none">
+                        <i class="fa-solid fa-user-plus text-xs"></i> добавить игрока
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loader State -->
+            <div id="players-loading" class="flex flex-col items-center justify-center py-20 gap-4 text-gray-500">
+                <div class="w-8 h-8 border-2 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
+                <p class="text-xs">синхронизируем базу эло в реальном времени...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="players-empty" class="hidden flex-col items-center justify-center py-20 text-gray-500 glass-panel rounded-3xl p-8 border border-white/5">
+                <i class="fa-solid fa-users-slash text-3xl mb-4 text-purple-900"></i>
+                <p class="text-sm font-medium">в базе пока нет участников</p>
+                <p class="text-[10px] text-gray-600 mt-1">добавьте первого игрока, чтобы начать трекинг эло</p>
+            </div>
+
+            <!-- Players Grid -->
+            <div id="players-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically loaded -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: MAP & DISTRICTS TAB -->
+        <section id="map-section" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
+            
+            <!-- Districts Tracker Panel (Left side) -->
+            <div class="lg:col-span-6 space-y-6">
+                <div class="glass-panel p-6 rounded-3xl space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-sm font-bold text-white tracking-wide">карта районов</h3>
+                            <p class="text-[10px] text-gray-500 mt-1">клик — убрать (зачеркнуть), 2-й клик — подозревать (подсветить), 3-й клик — сброс</p>
+                        </div>
+                        <button onclick="resetDistricts()" class="interactive-scale px-3 py-1.5 rounded-xl bg-red-950/30 hover:bg-red-950/50 text-red-400 text-[10px] font-bold border border-red-500/10 transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate-left"></i> сбросить карту
+                        </button>
+                    </div>
+
+                    <!-- Grid of Districts -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="districts-grid">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Custom Note taking zone -->
+                <div class="glass-panel p-5 rounded-3xl">
+                    <h4 class="text-xs font-bold text-gray-400 tracking-wide mb-3">заметки по игре</h4>
+                    <textarea id="game-notes" placeholder="запишите приметы скина, тайминги или поведение игроков..." class="w-full h-24 bg-neutral-950/20 rounded-2xl p-3 text-xs text-gray-300 placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-purple-500/30 border border-white/5 resize-none transition-all"></textarea>
+                </div>
+            </div>
+
+            <!-- Hint Generator Panel (Right side) -->
+            <div class="lg:col-span-6 space-y-6">
+                <div class="glass-panel p-6 rounded-3xl space-y-5">
+                    <div>
+                        <h3 class="text-sm font-bold text-white tracking-wide">умный генератор подсказок</h3>
+                        <p class="text-[10px] text-gray-500 mt-1">совместите два фактора, чтобы моментально передать наводку своей команде</p>
+                    </div>
+
+                    <!-- Group 1: Environment/Position -->
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-purple-400 tracking-wider">фактор 1: физическое окружение</span>
+                        <div class="flex flex-wrap gap-2" id="hint-group-1">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+
+                    <!-- Group 2: Player state -->
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-emerald-400 tracking-wider">фактор 2: поза и детали</span>
+                        <div class="flex flex-wrap gap-2" id="hint-group-2">
+                            <!-- JS populated -->
+                        </div>
+                    </div>
+
+                    <!-- Output Clue Box -->
+                    <div class="relative bg-neutral-950/50 rounded-2xl p-4 border border-white/5 overflow-hidden flex flex-col justify-center items-center gap-2 min-h-[110px] text-center">
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-indigo-500/5 pointer-events-none"></div>
+                        <span class="text-[9px] font-semibold text-gray-500 tracking-widest uppercase">сгенерированная наводка</span>
+                        
+                        <div id="hint-result" class="text-sm font-semibold text-purple-200 transition-all duration-300">
+                            выберите факторы выше
+                        </div>
+
+                        <button id="add-hint-btn" onclick="addClueToLog()" class="hidden mt-2 interactive-scale px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg hover:shadow-purple-950/40 text-xs font-bold text-white transition-all border border-purple-500/10 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane text-[10px]"></i> добавить наводку в лог
+                        </button>
+                    </div>
+
+                    <!-- Clue History Log (Synchronized) -->
+                    <div class="pt-2 border-t border-white/5">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold text-indigo-400 tracking-wider">активные наводки в логе</span>
+                            <button onclick="clearAllHints()" class="text-[9px] text-gray-500 hover:text-red-400 transition-colors">очистить лог</button>
+                        </div>
+                        <div id="hints-log" class="space-y-2 max-h-[160px] overflow-y-auto pr-1">
+                            <!-- Realtime clues rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ADD PLAYER MODAL -->
+    <div id="add-player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="glass-panel w-full max-w-md p-6 rounded-3xl space-y-6 border border-white/10 transform scale-95 transition-all duration-300">
+            <div class="flex justify-between items-center">
+                <h3 class="text-sm font-extrabold text-white tracking-wide">добавить нового участника</h3>
+                <button onclick="closeModal()" class="interactive-scale text-gray-500 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-gray-500 tracking-wider">имя или никнейм</label>
+                    <input type="text" id="new-player-name" placeholder="например: ivan_petrov" class="w-full bg-neutral-950 border border-white/5 rounded-2xl py-3 px-4 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-purple-500/30 transition-all">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-gray-500 tracking-wider">начальное эло (elo)</label>
+                    <input type="number" id="new-player-elo" value="10" min="0" max="1000" class="w-full bg-neutral-950 border border-white/5 rounded-2xl py-3 px-4 text-sm text-gray-200 focus:outline-none focus:border-purple-500/30 transition-all">
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-2">
+                <button onclick="closeModal()" class="w-1/2 py-3 rounded-2xl bg-neutral-900 hover:bg-neutral-850 text-xs font-semibold text-gray-400 hover:text-white transition-all border border-white/5">
+                    отмена
+                </button>
+                <button onclick="submitNewPlayer()" class="w-1/2 py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:shadow-lg hover:shadow-purple-950/40 text-xs font-bold text-white transition-all border border-purple-500/10">
+                    создать
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM CONFIRM DELETE MODAL (Replaces browser confirm) -->
+    <div id="delete-player-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="glass-panel w-full max-w-sm p-6 rounded-3xl space-y-6 border border-white/10 transform scale-95 transition-all duration-300">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 rounded-full bg-rose-950/50 border border-rose-500/30 flex items-center justify-center mx-auto text-rose-400 text-lg mb-1">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-white tracking-wide">удалить игрока?</h3>
+                <p id="delete-warning-text" class="text-xs text-gray-400">вы действительно хотите удалить участника из базы?</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeDeleteModal()" class="w-1/2 py-3 rounded-2xl bg-neutral-900 text-xs font-semibold text-gray-400 hover:text-white transition-all border border-white/5">
+                    отмена
+                </button>
+                <button id="delete-confirm-btn" class="w-1/2 py-3 rounded-2xl bg-rose-600 hover:shadow-lg hover:shadow-rose-950/40 text-xs font-bold text-white transition-all border border-rose-500/10">
+                    удалить
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-neutral-950/90 backdrop-blur-md border border-white/10 text-xs font-medium px-4 py-3 rounded-2xl text-purple-300 flex items-center gap-2 shadow-xl shadow-black/50 opacity-0 pointer-events-none transition-all duration-300">
+        <i class="fa-solid fa-circle-check text-purple-400"></i>
+        <span id="toast-message">действие выполнено</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="w-full max-w-7xl mx-auto px-6 py-6 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-gray-600 text-[10px] z-10">
+        <div>
+            прятки гамбит рп • разработан в минималистичном дизайне
+        </div>
+        <div class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            синхронизация активна
+        </div>
+    </footer>
+
+    <!-- Firebase Standard Integration via modular scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { initializeFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, addDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables given or generated
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'cloud-65583';
+        
+        // Exact configuration supplied by user
+        const firebaseConfig = {
+            apiKey: "AIzaSyBhr50uCwWCvaHlTrCJ9ZrIPStzoFuXYCY",
+            authDomain: "cloud-65583.firebaseapp.com",
+            projectId: "cloud-65583",
+            storageBucket: "cloud-65583.firebasestorage.app",
+            messagingSenderId: "740628528619",
+            appId: "1:740628528619:web:3d1b8e0887e2d7080aedae",
+            measurementId: "G-G4R39QFH29"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        
+        const db = initializeFirestore(app, {
+            experimentalForceLongPolling: true,
+            useFetchStreams: false
+        });
+        
+        const auth = getAuth(app);
+
+        // State holder
+        let players = [];
+        let hintLog = [];
+        let authUser = null;
+        let deleteTargetId = null;
+
+        // UI Toast Notification
+        window.showToast = function(text) {
+            const toast = document.getElementById('toast');
+            const message = document.getElementById('toast-message');
+            message.textContent = text;
+            toast.style.opacity = '1';
+            toast.style.pointerEvents = 'auto';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.pointerEvents = 'none';
+            }, 2500);
+        };
+
+        // Authenticate User autonomously (Rule 3 with safe fallback)
+        async function authenticate() {
+            // Try custom token first, catching mismatches silently to avoid breaking the app console
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                try {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                    return; // Success
+                } catch (tokenErr) {
+                    console.log("initial auth token mismatch or expired, switching to anonymous auth...");
+                }
+            }
+
+            // Fallback to anonymous authentication
+            try {
+                await signInAnonymously(auth);
+            } catch (err) {
+                console.error("anonymous authentication failed:", err);
+            }
+        }
+
+        // Initialize App & Sync Data
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                authUser = user;
+                initSync();
+            } else {
+                authenticate();
+            }
+        });
+
+        // Sync Firestore Real-time
+        function initSync() {
+            if (!authUser) return;
+
+            // RULE 1 - STRICT PATH: /artifacts/{appId}/public/data/{collectionName}
+            const colPlayersRef = collection(db, 'artifacts', appId, 'public', 'data', 'players');
+            const colHintsRef = collection(db, 'artifacts', appId, 'public', 'data', 'hints');
+            
+            // Listening to players updates with error callback
+            onSnapshot(colPlayersRef, (snapshot) => {
+                const updatedPlayers = [];
+                snapshot.forEach((doc) => {
+                    updatedPlayers.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Sort by ELO (high to low) in memory - Rule 2: NO COMPLEX QUERIES
+                players = updatedPlayers.sort((a, b) => b.elo - a.elo);
+                document.getElementById('players-loading').classList.add('hidden');
+                
+                renderPlayers();
+            }, (error) => {
+                console.error("firestore players sync failed: ", error);
+                document.getElementById('players-loading').innerHTML = `
+                    <div class="text-red-400 text-xs text-center">
+                        <i class="fa-solid fa-triangle-exclamation text-lg mb-2"></i>
+                        <p>произошла ошибка синхронизации с базой.</p>
+                        <p class="text-[10px] text-gray-600 mt-1">${error.message}</p>
+                    </div>
+                `;
+            });
+
+            // Listening to hints updates
+            onSnapshot(colHintsRef, (snapshot) => {
+                const updatedHints = [];
+                snapshot.forEach((doc) => {
+                    updatedHints.push({ id: doc.id, ...doc.data() });
+                });
+                // Sort newest first
+                hintLog = updatedHints.sort((a, b) => b.createdAt - a.createdAt);
+                renderHintsLog();
+            }, (error) => {
+                console.error("firestore hints sync failed: ", error);
+            });
+        }
+
+        // Add Player to Cloud
+        window.submitNewPlayer = async function() {
+            const nameInput = document.getElementById('new-player-name');
+            const eloInput = document.getElementById('new-player-elo');
+            
+            const rawName = nameInput.value.trim().toLowerCase();
+            const eloVal = parseInt(eloInput.value) || 10;
+
+            if (!rawName) {
+                showToast('пожалуйста, введите никнейм игрока');
+                return;
+            }
+
+            // Create uniform name format to avoid duplicates
+            const cleanNameId = rawName.replace(/[^a-z0-9_]/g, '_');
+
+            if (!authUser) return;
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', cleanNameId);
+
+            try {
+                // Check if already exists
+                const snap = await getDoc(docRef);
+                if (snap.exists()) {
+                    showToast('такой игрок уже зарегистрирован');
+                    return;
+                }
+
+                await setDoc(docRef, {
+                    name: rawName,
+                    elo: eloVal,
+                    createdAt: Date.now()
+                });
+
+                closeModal();
+                nameInput.value = '';
+                showToast(`игрок ${rawName} добавлен`);
+            } catch (err) {
+                console.error("error creating player:", err);
+                showToast('ошибка сохранения игрока');
+            }
+        };
+
+        // Modify Player ELO
+        window.adjustElo = async function(playerId, amount) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return;
+
+            const newElo = Math.max(0, player.elo + amount);
+            
+            // Level change feedback
+            const currentLevel = Math.min(10, Math.floor(player.elo / 10) + 1);
+            const nextLevel = Math.min(10, Math.floor(newElo / 10) + 1);
+            if (nextLevel > currentLevel) {
+                showToast(`${player.name} повысил уровень до ${nextLevel}!`);
+            }
+
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', playerId);
+            try {
+                await updateDoc(docRef, { elo: newElo });
+            } catch (err) {
+                console.error("error updating elo:", err);
+                showToast('ошибка обновления эло');
+            }
+        };
+
+        // Custom Delete Confirmation Controls
+        window.deletePlayer = function(playerId, name) {
+            deleteTargetId = playerId;
+            const modal = document.getElementById('delete-player-modal');
+            document.getElementById('delete-warning-text').textContent = `вы действительно хотите удалить участника ${name} из базы?`;
+            
+            // Show custom modal
+            modal.classList.remove('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.remove('scale-95');
+        };
+
+        window.closeDeleteModal = function() {
+            deleteTargetId = null;
+            const modal = document.getElementById('delete-player-modal');
+            modal.classList.add('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+        };
+
+        // Execute actual deletion
+        document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
+            if (!deleteTargetId) return;
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'players', deleteTargetId);
+            try {
+                await deleteDoc(docRef);
+                showToast(`игрок удален`);
+                closeDeleteModal();
+            } catch (err) {
+                console.error("error deleting player:", err);
+                showToast('ошибка удаления игрока');
+            }
+        });
+
+        // Render Players Leaderboard
+        function renderPlayers() {
+            const grid = document.getElementById('players-grid');
+            const emptyState = document.getElementById('players-empty');
+            
+            // Search filter
+            const searchTerm = document.getElementById('player-search').value.toLowerCase().trim();
+            const filtered = players.filter(p => p.name.toLowerCase().includes(searchTerm));
+
+            if (players.length === 0) {
+                emptyState.classList.remove('hidden');
+                grid.classList.add('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+                grid.classList.remove('hidden');
+            }
+
+            grid.innerHTML = '';
+            filtered.forEach(player => {
+                // Calculate faceit-style level (Max level 10, every 10 elo is next level)
+                const level = Math.min(10, Math.floor(player.elo / 10) + 1);
+                
+                // Calculate progress within the current level
+                let progressPercentage = 0;
+                if (level >= 10) {
+                    progressPercentage = 100;
+                } else {
+                    const currentLevelBase = (level - 1) * 10;
+                    progressPercentage = Math.round(((player.elo - currentLevelBase) / 10) * 100);
+                }
+
+                // Level colors matching faceit aesthetic
+                let levelColor = 'bg-neutral-600 text-white'; // Default / Low
+                let levelBorder = 'border-neutral-700';
+                if (level >= 4 && level <= 6) {
+                    levelColor = 'bg-emerald-600 text-white'; // Green
+                    levelBorder = 'border-emerald-500/20';
+                } else if (level >= 7 && level <= 8) {
+                    levelColor = 'bg-amber-500 text-neutral-950 font-bold'; // Yellow
+                    levelBorder = 'border-amber-500/20';
+                } else if (level >= 9) {
+                    levelColor = 'bg-gradient-to-r from-red-500 to-purple-600 text-white font-extrabold shadow-lg shadow-purple-950/40'; // High level red-purple
+                    levelBorder = 'border-purple-500/30';
+                }
+
+                const card = document.createElement('div');
+                card.className = 'glass-panel p-5 rounded-3xl flex flex-col justify-between space-y-5 animate-fade-in relative overflow-hidden';
+                card.innerHTML = `
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl pointer-events-none"></div>
+                    
+                    <!-- Player top details -->
+                    <div class="flex justify-between items-start">
+                        <div class="space-y-1">
+                            <h4 class="text-sm font-bold text-gray-200 tracking-wide break-all">${player.name}</h4>
+                            <span class="inline-block text-[10px] text-purple-400 font-medium">${player.elo} эло</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-xl ${levelColor} flex items-center justify-center text-xs tracking-tighter shadow-sm border ${levelBorder}">
+                                ${level}
+                            </div>
+                            <button onclick="deletePlayer('${player.id}', '${player.name}')" class="interactive-scale p-1.5 rounded-lg text-gray-600 hover:text-red-400 transition-colors">
+                                <i class="fa-solid fa-trash-can text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Level Progress Bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-[9px] font-semibold text-gray-500">
+                            <span>уровень ${level}</span>
+                            <span>${level < 10 ? `${progressPercentage}% до ур. ${level + 1}` : 'максимальный уровень'}</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-neutral-950 rounded-full overflow-hidden p-[2px]">
+                            <div class="h-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-500" style="width: ${progressPercentage}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- ELO Adjusters -->
+                    <div class="flex gap-2">
+                        <button onclick="adjustElo('${player.id}', -1)" class="w-1/2 py-2 rounded-2xl bg-neutral-900/50 hover:bg-red-950/20 text-xs font-semibold hover:text-red-400 border border-white/5 hover:border-red-500/20 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-minus text-[9px]"></i> 1 эло
+                        </button>
+                        <button onclick="adjustElo('${player.id}', 1)" class="w-1/2 py-2 rounded-2xl bg-neutral-900/50 hover:bg-emerald-950/20 text-xs font-bold hover:text-emerald-400 border border-white/5 hover:border-emerald-500/20 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-plus text-[9px]"></i> 1 эло
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Search trigger
+        window.filterPlayers = function() {
+            renderPlayers();
+        };
+
+        // Tab Switcher Logic
+        window.switchTab = function(tabName) {
+            const playersTabBtn = document.getElementById('tab-players-btn');
+            const mapTabBtn = document.getElementById('tab-map-btn');
+            const playersSec = document.getElementById('players-section');
+            const mapSec = document.getElementById('map-section');
+
+            if (tabName === 'players') {
+                playersTabBtn.className = "px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10";
+                mapTabBtn.className = "px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white";
+                playersSec.classList.remove('hidden');
+                mapSec.classList.add('hidden');
+            } else {
+                mapTabBtn.className = "px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-white bg-purple-600/20 shadow-inner border border-purple-500/10";
+                playersTabBtn.className = "px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-2 text-gray-400 hover:text-white";
+                playersSec.classList.add('hidden');
+                mapSec.classList.remove('hidden');
+            }
+        };
+
+        // Districts List & State Management
+        const districtsList = [
+            'спавн', 'вертолёт', 'пляж', 'центральный', 'фонтан', 
+            'гетто', 'элитный', 'промышленный', 'вода', 'подземка'
+        ];
+
+        // Store states: 0 = active, 1 = excluded, 2 = target
+        let districtStates = {};
+        districtsList.forEach(d => districtStates[d] = 0);
+
+        function renderDistricts() {
+            const grid = document.getElementById('districts-grid');
+            grid.innerHTML = '';
+
+            districtsList.forEach(dist => {
+                const state = districtStates[dist];
+                let stateClass = '';
+                let icon = '<i class="fa-solid fa-location-crosshairs text-[10px] text-gray-600"></i>';
+
+                if (state === 1) {
+                    stateClass = 'excluded';
+                    icon = '<i class="fa-solid fa-ban text-[10px] text-red-500/50"></i>';
+                } else if (state === 2) {
+                    stateClass = 'target';
+                    icon = '<i class="fa-solid fa-triangle-exclamation text-[10px] text-rose-500 animate-pulse"></i>';
+                }
+
+                const card = document.createElement('div');
+                card.className = `district-card glass-panel p-4 rounded-2xl flex items-center justify-between cursor-pointer border border-white/5 select-none ${stateClass}`;
+                card.innerHTML = `
+                    <span class="text-xs font-semibold text-gray-300">${dist}</span>
+                    <span>${icon}</span>
+                `;
+                card.addEventListener('click', () => {
+                    // Cycle: 0 -> 1 -> 2 -> 0
+                    districtStates[dist] = (districtStates[dist] + 1) % 3;
+                    renderDistricts();
+                });
+                grid.appendChild(card);
+            });
+        }
+
+        window.resetDistricts = function() {
+            districtsList.forEach(d => districtStates[d] = 0);
+            renderDistricts();
+            showToast('карта районов сброшена');
+        };
+
+        // Hint Generator Lists
+        const hintGroup1 = [
+            'темно', 'светло', 'высоко', 'низко', 'внутри', 
+            'снаружи', 'рядом', 'на объекте', 'за объектом', 'над объектом', 'под объектом'
+        ];
+
+        const hintGroup2 = [
+            'лежу', 'сижу', 'стою', 'оживлённо', 'отстранённо', 
+            'в текстурах', 'летаю', 'крыша', 'здание', 'проп'
+        ];
+
+        let selectedHint1 = '';
+        let selectedHint2 = '';
+
+        function renderHintPills() {
+            const container1 = document.getElementById('hint-group-1');
+            const container2 = document.getElementById('hint-group-2');
+
+            container1.innerHTML = '';
+            container2.innerHTML = '';
+
+            // Render Group 1
+            hintGroup1.forEach(hint => {
+                const isActive = selectedHint1 === hint;
+                const pill = document.createElement('button');
+                pill.className = `interactive-scale px-3.5 py-2 rounded-xl text-[11px] font-medium border transition-all ${
+                    isActive 
+                    ? 'bg-purple-600/30 text-purple-200 border-purple-500/40 shadow-inner' 
+                    : 'bg-neutral-900/40 text-gray-400 border-white/5 hover:border-white/10 hover:text-white'
+                }`;
+                pill.textContent = hint;
+                pill.addEventListener('click', () => {
+                    selectedHint1 = isActive ? '' : hint;
+                    renderHintPills();
+                    updateHintOutput();
+                });
+                container1.appendChild(pill);
+            });
+
+            // Render Group 2
+            hintGroup2.forEach(hint => {
+                const isActive = selectedHint2 === hint;
+                const pill = document.createElement('button');
+                pill.className = `interactive-scale px-3.5 py-2 rounded-xl text-[11px] font-medium border transition-all ${
+                    isActive 
+                    ? 'bg-emerald-600/30 text-emerald-200 border-emerald-500/40 shadow-inner' 
+                    : 'bg-neutral-900/40 text-gray-400 border-white/5 hover:border-white/10 hover:text-white'
+                }`;
+                pill.textContent = hint;
+                pill.addEventListener('click', () => {
+                    selectedHint2 = isActive ? '' : hint;
+                    renderHintPills();
+                    updateHintOutput();
+                });
+                container2.appendChild(pill);
+            });
+        }
+
+        // Format and show dynamic combined hint
+        function updateHintOutput() {
+            const outText = document.getElementById('hint-result');
+            const addBtn = document.getElementById('add-hint-btn');
+
+            if (selectedHint1 && selectedHint2) {
+                outText.innerHTML = `
+                    <div class="flex items-center gap-3 justify-center">
+                        <span class="text-purple-300 font-bold bg-purple-950/50 px-3 py-1.5 rounded-xl border border-purple-500/10">${selectedHint1}</span>
+                        <span class="text-gray-600 text-xs">⟷</span>
+                        <span class="text-emerald-300 font-bold bg-emerald-950/50 px-3 py-1.5 rounded-xl border border-emerald-500/10">${selectedHint2}</span>
+                    </div>
+                `;
+                addBtn.classList.remove('hidden');
+            } else if (selectedHint1 || selectedHint2) {
+                outText.innerHTML = `
+                    <span class="text-gray-400 font-medium">выберите второй фактор</span>
+                `;
+                addBtn.classList.add('hidden');
+            } else {
+                outText.innerHTML = `
+                    <span class="text-gray-600">выберите факторы выше</span>
+                `;
+                addBtn.classList.add('hidden');
+            }
+        }
+
+        // Push the selected clues down to the synchronized log and reset selections immediately
+        window.addClueToLog = async function() {
+            if (!selectedHint1 || !selectedHint2) return;
+            if (!authUser) return;
+
+            const finalHintText = `${selectedHint1} + ${selectedHint2}`;
+
+            try {
+                // Rule 1 strict path
+                const hintsCol = collection(db, 'artifacts', appId, 'public', 'data', 'hints');
+                await addDoc(hintsCol, {
+                    text: finalHintText,
+                    createdAt: Date.now()
+                });
+
+                // Clear selections so user can quickly type the next one
+                selectedHint1 = '';
+                selectedHint2 = '';
+                renderHintPills();
+                updateHintOutput();
+                showToast('наводка добавлена в лог');
+            } catch (err) {
+                console.error("error adding hint to cloud log: ", err);
+                showToast('ошибка добавления наводки');
+            }
+        };
+
+        // Render synced hint logs
+        function renderHintsLog() {
+            const logContainer = document.getElementById('hints-log');
+            if (hintLog.length === 0) {
+                logContainer.innerHTML = `
+                    <p class="text-[10px] text-gray-600 text-center py-4">лог пуст. добавьте наводку выше</p>
+                `;
+                return;
+            }
+
+            logContainer.innerHTML = '';
+            // Display maximum of 8 latest hints to keep layout compact and clean
+            const visibleLog = hintLog.slice(0, 8);
+            
+            visibleLog.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between bg-neutral-950/40 border border-white/5 rounded-xl p-2.5 hover:bg-neutral-950/60 transition-colors';
+                
+                // Formulate simple relative format or time
+                const timeStr = new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                
+                div.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-[9px] text-gray-500 bg-neutral-900 px-1.5 py-0.5 rounded">${timeStr}</span>
+                        <span class="text-xs text-purple-200 font-medium">${item.text}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="copyHintText('${item.text}')" class="p-1 text-gray-500 hover:text-white transition-colors" title="скопировать">
+                            <i class="fa-solid fa-copy text-[10px]"></i>
+                        </button>
+                        <button onclick="deleteSingleHint('${item.id}')" class="p-1 text-gray-500 hover:text-rose-400 transition-colors" title="удалить">
+                            <i class="fa-solid fa-xmark text-[10px]"></i>
+                        </button>
+                    </div>
+                `;
+                logContainer.appendChild(div);
+            });
+        }
+
+        // Copy clue to clipboard utilizing fallback mechanism
+        window.copyHintText = function(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast('подсказка скопирована');
+            } catch (err) {
+                console.error("copy failed: ", err);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        };
+
+        // Delete a single hint log entry
+        window.deleteSingleHint = async function(hintId) {
+            if (!authUser) return;
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'hints', hintId);
+            try {
+                await deleteDoc(docRef);
+                showToast('наводка удалена из лога');
+            } catch (err) {
+                console.error("error deleting hint: ", err);
+            }
+        };
+
+        // Clear all elements in the synchronized hint log
+        window.clearAllHints = async function() {
+            if (!authUser) return;
+            // Iterate and delete existing logs sequentially to maintain simplicity
+            try {
+                const promises = hintLog.map(item => {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'hints', item.id);
+                    return deleteDoc(docRef);
+                });
+                await Promise.all(promises);
+                showToast('лог наводок очищен');
+            } catch (err) {
+                console.error("error clearing hints log: ", err);
+            }
+        };
+
+        // Modal Controls
+        window.openModal = function() {
+            const modal = document.getElementById('add-player-modal');
+            modal.classList.remove('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.remove('scale-95');
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('add-player-modal');
+            modal.classList.add('pointer-events-none', 'opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+        };
+
+        // Global Onload Hook
+        window.onload = function() {
+            renderDistricts();
+            renderHintPills();
+        };
+
+    </script>
+</body>
+</html>
