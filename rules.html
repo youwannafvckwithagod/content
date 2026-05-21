@@ -11,7 +11,7 @@
     <!-- Google Fonts (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2 family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -92,7 +92,7 @@
             <div class="max-w-4xl">
                 <span class="text-xs font-bold text-brand-400 tracking-widest uppercase mb-2 block">Свод правил</span>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-6">
-                    Прятки GambitRP2 <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-indigo-300">GambitRP2</span>
+                    Прятки <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-indigo-300">GambitRP2</span>
                 </h2>
                 
                 <!-- Intro paragraph -->
@@ -314,11 +314,11 @@
                     <p class="text-xs text-slate-400 mb-5">Официальная разметка игрового пространства. Используйте её для координации удалений.</p>
                 </div>
 
-                <!-- Main Map Container (Static, No JS) -->
-                <div class="relative group overflow-hidden rounded-xl border border-slate-800 bg-slate-900 flex-grow flex items-center justify-center min-h-[350px] md:min-h-[450px]">
+                <!-- Main Map Container (Static, No JS, Fully visible map) -->
+                <div class="relative group overflow-hidden rounded-xl border border-slate-800 bg-brand-950/40 flex-grow flex items-center justify-center min-h-[350px] md:min-h-[450px] p-2">
                     <img src="https://youwannafvckwithagod.github.io/content/map.jpg" 
-                         alt="GambitRP2 Map" 
-                         class="w-full h-full object-cover max-h-[500px]"
+                         alt="Карта GambitRP2" 
+                         class="w-full h-auto max-h-[700px] object-contain rounded-lg"
                          onerror="this.src='https://placehold.co/800x600/110e1f/a78bfa?text=Map+Image+Failed+to+Load'">
                 </div>
             </div>
