@@ -256,8 +256,8 @@
                     <i class="fa-solid fa-map-location-dot text-[11px]"></i> районы и наводки
                 </button>
             </div>
-            <a href="https://youwannafvckwithagod.github.io/content/rules" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-2xl bg-neutral-900/40 hover:bg-neutral-800/60 text-xs font-semibold text-gray-400 hover:text-white border border-white/5 backdrop-blur-xl transition-all flex items-center gap-2">
-                <i class="fa-solid fa-file-shield text-[11px] text-primary"></i> правила
+            <a href="https://youwannafvckwithagod.github.io/content/rules" target="_blank" rel="noopener noreferrer" class="w-11 h-11 rounded-2xl bg-neutral-900/40 hover:bg-neutral-850/60 border border-white/5 backdrop-blur-xl transition-all flex items-center justify-center shrink-0" title="правила">
+                <i class="fa-solid fa-file-shield text-xs text-primary"></i>
             </a>
         </div>
     </header>
@@ -538,6 +538,24 @@
         // Prepopulate empty districts
         districtsList.forEach(d => { districtStates[d] = 0; });
 
+        // Lightweight Toast helper to prevent undefined ReferenceError
+        window.showToast = function(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            if (toast && toastMsg) {
+                toastMsg.textContent = message;
+                toast.classList.remove('opacity-0', 'pointer-events-none');
+                toast.classList.add('opacity-100');
+                
+                // Clear any previous timeout transitions
+                if (window.toastTimeout) clearTimeout(window.toastTimeout);
+                window.toastTimeout = setTimeout(() => {
+                    toast.classList.remove('opacity-100');
+                    toast.classList.add('opacity-0', 'pointer-events-none');
+                }, 3500);
+            }
+        };
+
         // UI Connection visual updater
         function setConnectionStatus(status) {
             const pulseDot = document.getElementById('sync-pulse-dot');
@@ -621,56 +639,107 @@
         }
 
         // --- TIMER LOGIC ENGINE ---
-        window.changeTimerMode = function() {
+        window.changeTimerMode = async function() {
             const mode = document.getElementById('timer-mode-select').value;
             const config = timerConfigs[mode];
             
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            timerSecondsLeft = config.time;
-            elapsedCounter = 0;
-            
-            document.getElementById('timer-helper-text').textContent = config.desc;
-            document.getElementById('timer-toggle-icon').className = "fa-solid fa-play";
-            updateTimerDisplay();
-        };
+            const newState = {
+                mode: mode,
+                secondsLeft: config.time,
+                isRunning: false,
+                updatedAt: Date.now()
+            };
 
-        window.toggleTimer = function() {
-            if (isTimerRunning) {
+            if (isOnline && db) {
+                try {
+                    await setDoc(doc(db, 'global', 'timer'), newState);
+                } catch (e) {
+                    console.error("error syncing timer mode change:", e);
+                }
+            } else {
                 clearInterval(timerInterval);
                 isTimerRunning = false;
+                timerSecondsLeft = config.time;
+                elapsedCounter = 0;
+                document.getElementById('timer-helper-text').textContent = config.desc;
                 document.getElementById('timer-toggle-icon').className = "fa-solid fa-play";
-            } else {
-                isTimerRunning = true;
-                document.getElementById('timer-toggle-icon').className = "fa-solid fa-pause";
-                
-                timerInterval = setInterval(() => {
-                    if (timerSecondsLeft > 0) {
-                        timerSecondsLeft--;
-                        elapsedCounter++;
-                        updateTimerDisplay();
-                        
-                        // Parse custom event triggers based on mode selected
-                        checkTimerMilestones();
-                    } else {
-                        clearInterval(timerInterval);
-                        isTimerRunning = false;
-                        document.getElementById('timer-toggle-icon').className = "fa-solid fa-play";
-                        triggerLiveNotification("время раунда истекло! все прячущиеся найдены?");
-                    }
-                }, 1000);
+                updateTimerDisplay();
             }
         };
 
-        window.resetTimer = function() {
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            elapsedCounter = 0;
-            document.getElementById('timer-toggle-icon').className = "fa-solid fa-play";
+        window.toggleTimer = async function() {
             const mode = document.getElementById('timer-mode-select').value;
-            timerSecondsLeft = timerConfigs[mode].time;
-            updateTimerDisplay();
+            const nextRunningState = !isTimerRunning;
+            
+            const newState = {
+                mode: mode,
+                secondsLeft: timerSecondsLeft,
+                isRunning: nextRunningState,
+                updatedAt: Date.now()
+            };
+
+            if (isOnline && db) {
+                try {
+                    await setDoc(doc(db, 'global', 'timer'), newState);
+                } catch (e) {
+                    console.error("error syncing timer play state change:", e);
+                }
+            } else {
+                if (isTimerRunning) {
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    document.getElementById('timer-toggle-icon').className = "fa-solid fa-play";
+                } else {
+                    isTimerRunning = true;
+                    document.getElementById('timer-toggle-icon').className = "fa-solid fa-pause";
+                    startLocalInterval();
+                }
+            }
         };
+
+        window.resetTimer = async function() {
+            const mode = document.getElementById('timer-mode-select').value;
+            
+            const newState = {
+                mode: mode,
+                secondsLeft: timerConfigs[mode].time,
+                isRunning: false,
+                updatedAt: Date.now()
+            };
+
+            if (isOnline && db) {
+                try {
+                    await setDoc(doc(db, 'global', 'timer'), newState);
+                } catch (e) {
+                    console.error("error syncing timer reset:", e);
+                }
+            } else {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                elapsedCounter = 0;
+                document.getElementById('timer-toggle-icon').className = "fa-solid fa-play";
+                timerSecondsLeft = timerConfigs[mode].time;
+                updateTimerDisplay();
+            }
+        };
+
+        function startLocalInterval() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (timerSecondsLeft > 0) {
+                    timerSecondsLeft--;
+                    elapsedCounter++;
+                    updateTimerDisplay();
+                    checkTimerMilestones();
+                } else {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                    isTimerRunning = false;
+                    document.getElementById('timer-toggle-icon').className = "fa-solid fa-play";
+                    triggerLiveNotification("время раунда истекло! все прячущиеся найдены?");
+                }
+            }, 1000);
+        }
 
         function updateTimerDisplay() {
             const mins = Math.floor(timerSecondsLeft / 60);
@@ -807,6 +876,7 @@
             const colHintsRef = collection(db, 'hints_meta');
             const docDistrictsRef = doc(db, 'global', 'map');
             const docNotesRef = doc(db, 'global', 'notes');
+            const docTimerRef = doc(db, 'global', 'timer');
             
             let isFirstLoadComplete = false;
 
@@ -869,6 +939,44 @@
                 }
             }, (error) => {
                 console.error("notes database snapshot failure: ", error);
+            });
+
+            // 5. Shared Timer State Listener
+            onSnapshot(docTimerRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    if (data.mode && document.getElementById('timer-mode-select').value !== data.mode) {
+                        document.getElementById('timer-mode-select').value = data.mode;
+                        document.getElementById('timer-helper-text').textContent = timerConfigs[data.mode].desc;
+                    }
+                    
+                    const serverIsRunning = data.isRunning;
+                    const serverSecondsLeft = data.secondsLeft;
+                    const serverUpdatedAt = data.updatedAt;
+                    
+                    if (serverIsRunning) {
+                        const timePassed = Math.floor((Date.now() - serverUpdatedAt) / 1000);
+                        timerSecondsLeft = Math.max(0, serverSecondsLeft - timePassed);
+                        
+                        if (!isTimerRunning) {
+                            isTimerRunning = true;
+                            document.getElementById('timer-toggle-icon').className = "fa-solid fa-pause";
+                            startLocalInterval();
+                        }
+                    } else {
+                        isTimerRunning = false;
+                        document.getElementById('timer-toggle-icon').className = "fa-solid fa-play";
+                        if (timerInterval) {
+                            clearInterval(timerInterval);
+                            timerInterval = null;
+                        }
+                        timerSecondsLeft = serverSecondsLeft;
+                    }
+                    updateTimerDisplay();
+                }
+            }, (error) => {
+                console.error("timer database snapshot failure: ", error);
             });
         }
 
